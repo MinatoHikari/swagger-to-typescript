@@ -1,5 +1,5 @@
 {
-  "name": "vite-electron-builder",
+  "name": "swagger-to-typescript",
   "private": true,
   "engines": {
     "node": ">=v14.16",
@@ -11,6 +11,7 @@
     "build": "node scripts/build.js",
     "precompile": "cross-env MODE=production npm run build",
     "compile": "electron-builder build --config electron-builder.config.js --dir --config.asar=false",
+    "compile-win": "electron-builder build --config electron-builder.config.js --dir --config.asar=false --win",
     "pretest": "cross-env MODE=test npm run build",
     "test": "node tests/app.spec.js",
     "watch": "node scripts/watch.js",
@@ -42,6 +43,7 @@
     "eslint": "^7.29.0",
     "eslint-plugin-vue": "^7.12.1",
     "lint-staged": "^11.0.0",
+    "prettier": "^2.3.2",
     "simple-git-hooks": "^2.5.1",
     "spectron": "^15.0.0",
     "typescript": "^4.3.4",
@@ -49,7 +51,11 @@
     "vue-tsc": "^0.2.0"
   },
   "dependencies": {
+    "@vueuse/core": "^5.0.3",
     "electron-updater": "^4.3.9",
+    "naive-ui": "^2.14.0",
+    "pinia": "^2.0.0-beta.3",
+    "vfonts": "^0.1.0",
     "vue": "^3.1.2",
     "vue-router": "^4.0.10"
   }

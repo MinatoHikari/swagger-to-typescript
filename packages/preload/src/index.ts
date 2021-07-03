@@ -1,45 +1,71 @@
-import {contextBridge} from 'electron';
+import type { IpcRendererEvent } from 'electron';
+import { contextBridge, ipcMain, ipcRenderer } from 'electron';
 
 const apiKey = 'electron';
+const listenerMap = new Map();
 /**
  * @see https://github.com/electron/electron/issues/21437#issuecomment-573522360
  */
 const api: ElectronApi = {
-  versions: process.versions,
+    versions: process.versions,
+    send: (channel: string, data?: any) => {
+        ipcRenderer.send(channel, data);
+    },
+    sendSync: (channel: string, data?: any) => {
+        return ipcRenderer.sendSync(channel, data);
+    },
+    receive: (channel: string, listener: (...args: any) => void) => {
+        ipcRenderer.on(channel, (event: IpcRendererEvent, ...args: any) => listener(...args));
+        const listenerList = ipcRenderer.listeners(channel);
+        const newest = listenerList[listenerList.length - 1];
+        const mark = Symbol();
+        listenerMap.set(mark, newest);
+        return mark;
+    },
+    invoke: (channel: string, listenerSymbol: symbol) => {
+        const listener = listenerMap.get(listenerSymbol);
+        if (listener) ipcRenderer.removeListener(channel, listener);
+    },
+    // hasListened:(key:symbol) => {
+    //     ipcRenderer.
+    // }
 };
 
 if (import.meta.env.MODE !== 'test') {
-  /**
-   * The "Main World" is the JavaScript context that your main renderer code runs in.
-   * By default, the page you load in your renderer executes code in this world.
-   *
-   * @see https://www.electronjs.org/docs/api/context-bridge
-   */
-  contextBridge.exposeInMainWorld(apiKey, api);
+    /**
+     * The "Main World" is the JavaScript context that your main renderer code runs in.
+     * By default, the page you load in your renderer executes code in this world.
+     *
+     * @see https://www.electronjs.org/docs/api/context-bridge
+     */
+    contextBridge.exposeInMainWorld(apiKey, api);
 } else {
-
-  /**
-   * Recursively Object.freeze() on objects and functions
-   * @see https://github.com/substack/deep-freeze
-   * @param obj Object on which to lock the attributes
-   */
-  const deepFreeze = (obj: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
-    if (typeof obj === 'object' && obj !== null) {
-      Object.keys(obj).forEach((prop) => {
-        const val = obj[prop];
-        if ((typeof val === 'object' || typeof val === 'function') && !Object.isFrozen(val)) {
-          deepFreeze(val);
+    /**
+     * Recursively Object.freeze() on objects and functions
+     * @see https://github.com/substack/deep-freeze
+     * @param obj Object on which to lock the attributes
+     */
+    const deepFreeze = (obj: any) => {
+        // eslint-disable-line @typescript-eslint/no-explicit-any
+        if (typeof obj === 'object' && obj !== null) {
+            Object.keys(obj).forEach((prop) => {
+                const val = obj[prop];
+                if (
+                    (typeof val === 'object' || typeof val === 'function') &&
+                    !Object.isFrozen(val)
+                ) {
+                    deepFreeze(val);
+                }
+            });
         }
-      });
-    }
 
-    return Object.freeze(obj);
-  };
+        return Object.freeze(obj);
+    };
 
-  deepFreeze(api);
+    deepFreeze(api);
 
-  window[apiKey] = api;
+    window[apiKey] = api;
 
-  // Need for Spectron tests
-  window.electronRequire = require;
+    // Need for Spectron tests
+    window.electronRequire = require;
 }

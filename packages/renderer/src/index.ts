@@ -1,7 +1,11 @@
-import {createApp} from 'vue';
+import { createApp } from 'vue';
 import App from '/@/App.vue';
 import router from '/@/router';
+import { createPinia } from 'pinia';
+import { installNaive } from './naiveUI';
+import 'vfonts/Lato.css';
 
-createApp(App)
-  .use(router)
-  .mount('#app');
+const app = createApp(App);
+installNaive(app);
+
+app.use(router).use(createPinia()).mount('#app');

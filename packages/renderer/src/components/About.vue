@@ -1,5 +1,5 @@
 <template>
-  <h2 id="versions">
+  <h2 id="versions" style="text-align: center">
     Lib versions
   </h2>
   <div>

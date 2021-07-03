@@ -1,4 +1,4 @@
-const now = new Date;
+const now = new Date();
 const buildVersion = `${now.getFullYear() - 2000}.${now.getMonth() + 1}.${now.getDate()}`;
 
 /**
@@ -6,16 +6,17 @@ const buildVersion = `${now.getFullYear() - 2000}.${now.getMonth() + 1}.${now.ge
  * @see https://www.electron.build/configuration/configuration
  */
 const config = {
-  directories: {
-    output: 'dist',
-    buildResources: 'buildResources',
-  },
-  files: [
-    'packages/**/dist/**',
-  ],
-  extraMetadata: {
-    version: buildVersion,
-  },
+    directories: {
+        output: 'dist',
+        buildResources: 'buildResources',
+    },
+    files: ['packages/**/dist/**'],
+    extraMetadata: {
+        version: buildVersion,
+    },
+    win: {
+        target: 'portable',
+    },
 };
 
 module.exports = config;
