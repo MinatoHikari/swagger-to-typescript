@@ -65,8 +65,10 @@ const createWindow = async () => {
         if (quit) {
             return (mainWindow = null);
         }
-        e.preventDefault();
-        mainWindow?.hide();
+        if (process.platform === 'darwin') {
+            e.preventDefault();
+            mainWindow?.hide();
+        }
     });
 
     /**
@@ -96,7 +98,9 @@ app.on('window-all-closed', () => {
     }
 });
 
-app.on('before-quit', () => (quit = true));
+app.on('before-quit', () => {
+    quit = true;
+});
 
 app.on('activate', () => {
     if (mainWindow === null) {
