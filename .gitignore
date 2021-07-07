@@ -28,7 +28,6 @@ types/env.d.ts
 .idea/**/dynamic.xml
 .idea/**/uiDesigner.xml
 .idea/**/dbnavigator.xml
-.idea/**/Project_Default.xml
 
 # Gradle
 .idea/**/gradle.xml

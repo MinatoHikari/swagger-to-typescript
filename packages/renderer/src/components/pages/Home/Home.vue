@@ -52,9 +52,9 @@
     <SearchNavigator
         @clear-search="clearSearch"
         @search="showSearch"
-        @prev="$refs.listRef.scrollToPrevResult()"
-        @next="$refs.listRef.scrollToNextResult()"
-        @scroll-to="(e) => $refs.listRef.scrollToTargetIndex(e)"
+        @prev="scrollToPref"
+        @next="scrollToNext"
+        @scroll-to="scrollToTargetIndex"
     />
 </template>
 
@@ -63,12 +63,13 @@ import { defineComponent, onBeforeUnmount, provide, ref, reactive, onMounted } f
 import { useElectron, useReceiver } from '/@/use/electron';
 import type { NForm, NInput } from 'naive-ui';
 import { useMessage } from 'naive-ui';
-import List from '../../modules/list.vue';
+import List from '../../modules/list/list.vue';
 import type { SwaggerApiResult } from '../../../../../../types/swagger';
 import { SwaggerApiResultKey } from '../../../../types/home';
 import { errorEvent, requestSwaggerEvent } from '../../../../../common/events';
 import { useSearch } from '/@/components/pages/Home/useSearch';
 import SearchNavigator from '/@/components/modules/searchNavigator.vue';
+import { useList } from '/@/components/pages/Home/useList';
 
 const { send, invoke } = useElectron();
 
@@ -81,9 +82,9 @@ export default defineComponent({
     setup() {
         const message = useMessage();
 
-        const listRef = ref<List | null>(null);
+        const { listRef, scrollToTargetIndex, scrollToNext, scrollToPref } = useList();
 
-        const requestInputRef = ref<NInput | null>(null);
+        const requestInputRef = ref<InstanceType<typeof NInput> | null>(null);
 
         onMounted(() => {
             requestInputRef.value?.focus();
@@ -93,7 +94,7 @@ export default defineComponent({
         const formData = ref({
             url: '',
         });
-        const formRef = ref<NForm | null>(null);
+        const formRef = ref<InstanceType<typeof NForm> | null>(null);
         const source = ref({});
 
         provide(SwaggerApiResultKey, source);
@@ -116,8 +117,8 @@ export default defineComponent({
             listRef.value && (listRef.value.innerCardRefs.length = 0);
             loading.value = true;
             if (formRef.value) {
-                formRef.value?.validate((err: string) => {
-                    if (!err) {
+                formRef.value?.validate((errors) => {
+                    if (!errors) {
                         send(requestSwaggerEvent, formData.value.url);
                     }
                 });
@@ -140,6 +141,9 @@ export default defineComponent({
             inputRef,
             requestInputRef,
             listRef,
+            scrollToPref,
+            scrollToNext,
+            scrollToTargetIndex,
         };
     },
     data() {
