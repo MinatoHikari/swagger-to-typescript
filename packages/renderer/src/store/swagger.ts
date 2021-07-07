@@ -4,9 +4,11 @@ import type { SwaggerDefinition, SwaggerMethodsProperty } from '../../../../type
 export const useSwaggerStore = defineStore({
     id: 'swagger',
     state: () => ({
-        rest: '',
+        title: '',
+        method: '',
         path: '',
         data: {} as SwaggerMethodsProperty,
         definitionMap: new Map<string, SwaggerDefinition>(),
     }),
 });
+

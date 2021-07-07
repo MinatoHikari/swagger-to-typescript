@@ -53,7 +53,13 @@ export type SwaggerParams = {
     in: string;
     name: string;
     required: boolean;
-    type: SwaggerParameter;
+    type?: SwaggerParameter;
+    schema?: {
+        $ref: string;
+    };
+    items?: {
+        $ref?: string;
+    };
 };
 
 export type SwaggerResponses = {
@@ -73,11 +79,18 @@ export type SwaggerDefinition = {
     description: string;
     type: 'object';
     properties: {
-        [key: string]: {
-            type: SwaggerParameter;
-            description: string;
-            format?: SwaggerFormat;
-        };
+        [key: string]: SwaggerDefinitionProperty;
+    };
+    required?: string[];
+};
+
+export type SwaggerDefinitionProperty = {
+    type?: SwaggerParameter;
+    description?: string;
+    format?: SwaggerFormat;
+    $ref?: string;
+    items?: {
+        $ref?: string;
     };
 };
 

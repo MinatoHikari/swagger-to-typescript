@@ -3,8 +3,9 @@
         <n-gi span="24">
             <div v-for="tag in tags" :key="tag[0]" class="list-card">
                 <n-card
-                    :title="tag[0]"
+                    :title="`${tag[0]}`"
                     hoverable
+                    size="small"
                     :segmented="{
                         content: 'hard',
                     }"
@@ -12,17 +13,29 @@
                     <n-list>
                         <n-list-item v-for="(mths, path) of getPathsObj(tag[0])" :key="path">
                             <n-card
-                                v-for="rest in Object.keys(mths)"
-                                :key="rest"
+                                v-for="method in Object.keys(mths)"
+                                :key="method + path"
+                                :ref="(el) => setRefList(el, path, mths[method].summary)"
                                 size="small"
+                                :style="{
+                                    borderColor: matchSearch([path, mths[method].summary])
+                                        ? '#16a058'
+                                        : '',
+                                }"
                                 hoverable
+                                class="list-card-sm"
                                 style="cursor: pointer"
-                                @click="toDetail(rest, path, mths[rest])"
+                                @click="toDetail(tag[0], method, path, mths[method])"
                             >
                                 <n-grid>
                                     <n-gi span="18">
-                                        <n-tag style="margin-right: 12px">{{ rest }}</n-tag>
-                                        <span>{{ path }}</span>
+                                        <n-tag style="margin-right: 12px">{{ method }}</n-tag>
+                                        <span v-if="matchSearch([path])">
+                                            <span>{{ path.split(searchValCache)[0] }}</span>
+                                            <span style="color: #f2a531">{{ searchValCache }}</span>
+                                            <span>{{ path.split(searchValCache)[1] }}</span>
+                                        </span>
+                                        <span v-else>{{ path }}</span>
                                     </n-gi>
                                     <n-gi span="6">
                                         <div
@@ -33,7 +46,26 @@
                                                 font-size: 13px;
                                             "
                                         >
-                                            {{ mths[rest].summary }}
+                                            <span v-if="matchSearch([mths[method].summary])">
+                                                <span>
+                                                    {{
+                                                        mths[method].summary.split(
+                                                            searchValCache,
+                                                        )[0]
+                                                    }}
+                                                </span>
+                                                <span style="color: #f2a531">
+                                                    {{ searchValCache }}
+                                                </span>
+                                                <span>
+                                                    {{
+                                                        mths[method].summary.split(
+                                                            searchValCache,
+                                                        )[1]
+                                                    }}
+                                                </span>
+                                            </span>
+                                            <span v-else>{{ mths[method].summary }}</span>
                                         </div>
                                     </n-gi>
                                 </n-grid>
@@ -47,7 +79,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, ref, watch } from 'vue';
+import type { ComponentInternalInstance } from 'vue';
+import { defineComponent, inject, onBeforeUpdate, ref, watch } from 'vue';
 import { SwaggerApiResultKey } from '../../../types/home';
 import type {
     SwaggerApiResult,
@@ -58,6 +91,9 @@ import type {
 import type { SwaggerMethodsProperty } from '../../../../../types/swagger';
 import { useRouter } from 'vue-router';
 import { useSwaggerStore } from '/@/store/swagger';
+import { useSearchResult } from '/@/components/pages/Home/useSearch';
+import type { NCard } from 'naive-ui';
+import type { ComponentPublicInstance } from '@vue/runtime-core';
 
 export default defineComponent({
     name: 'List',
@@ -79,9 +115,24 @@ export default defineComponent({
 
         const tags = ref(new Map<string, SwaggerPath>());
 
+        const innerCardRefs = ref<
+            { el: ComponentPublicInstance | null; path: string; summary: string }[]
+        >([]);
+
+        const setRefList = (el: ComponentPublicInstance | null, path: string, summary: string) => {
+            if (el)
+                innerCardRefs.value.push({
+                    el,
+                    path,
+                    summary,
+                });
+        };
+
         watch(
             source,
             (val) => {
+                console.log(innerCardRefs.value);
+
                 tags.value = new Map<string, SwaggerPath>();
                 for (let item of val.tags) {
                     tags.value.set(item.name, {});
@@ -110,9 +161,23 @@ export default defineComponent({
 
         const getPathsObj = (name: string) => tags.value.get(name) ?? {};
 
-        const toDetail = (rest: string, path: string, data: SwaggerMethodsProperty) => {
+        const {
+            searchValCache,
+            matchSearch,
+            scrollToNextResult,
+            scrollToPrevResult,
+            scrollToTargetIndex,
+        } = useSearchResult(innerCardRefs);
+
+        const toDetail = (
+            title: string,
+            method: string,
+            path: string,
+            data: SwaggerMethodsProperty,
+        ) => {
             store.$patch({
-                rest,
+                title,
+                method,
                 path,
                 data,
             });
@@ -124,6 +189,13 @@ export default defineComponent({
             tags,
             getPathsObj,
             toDetail,
+            searchValCache,
+            matchSearch,
+            innerCardRefs,
+            setRefList,
+            scrollToNextResult,
+            scrollToPrevResult,
+            scrollToTargetIndex,
         };
     },
 });
@@ -132,5 +204,8 @@ export default defineComponent({
 <style scoped>
 .list-card:not(:nth-of-type(1)) {
     margin-top: 24px;
+}
+.list-card-sm:not(:nth-of-type(1)) {
+    margin-top: 12px;
 }
 </style>

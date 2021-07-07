@@ -14,6 +14,16 @@ import {
     NForm,
     NFormItem,
     NDropdown,
+    NDataTable,
+    NCollapse,
+    NCollapseItem,
+    NCheckbox,
+    NModal,
+    NAffix,
+    NIcon,
+    NTooltip,
+    NInputNumber,
+    NBackTop,
 } from 'naive-ui';
 import type { App } from 'vue';
 
@@ -35,6 +45,16 @@ export const installNaive = (app: App<Element>): void => {
             NForm,
             NFormItem,
             NDropdown,
+            NDataTable,
+            NCollapse,
+            NCollapseItem,
+            NCheckbox,
+            NModal,
+            NAffix,
+            NIcon,
+            NTooltip,
+            NInputNumber,
+            NBackTop,
         ],
     });
 

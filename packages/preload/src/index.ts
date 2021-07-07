@@ -1,31 +1,16 @@
 import type { IpcRendererEvent } from 'electron';
 import { contextBridge, ipcMain, ipcRenderer } from 'electron';
+import eventApi from './api/event';
+import interaction from '/@/api/interaction';
 
 const apiKey = 'electron';
-const listenerMap = new Map();
 /**
  * @see https://github.com/electron/electron/issues/21437#issuecomment-573522360
  */
 const api: ElectronApi = {
     versions: process.versions,
-    send: (channel: string, data?: any) => {
-        ipcRenderer.send(channel, data);
-    },
-    sendSync: (channel: string, data?: any) => {
-        return ipcRenderer.sendSync(channel, data);
-    },
-    receive: (channel: string, listener: (...args: any) => void) => {
-        ipcRenderer.on(channel, (event: IpcRendererEvent, ...args: any) => listener(...args));
-        const listenerList = ipcRenderer.listeners(channel);
-        const newest = listenerList[listenerList.length - 1];
-        const mark = Symbol();
-        listenerMap.set(mark, newest);
-        return mark;
-    },
-    invoke: (channel: string, listenerSymbol: symbol) => {
-        const listener = listenerMap.get(listenerSymbol);
-        if (listener) ipcRenderer.removeListener(channel, listener);
-    },
+    ...eventApi,
+    ...interaction,
     // hasListened:(key:symbol) => {
     //     ipcRenderer.
     // }

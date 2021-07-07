@@ -9,13 +9,14 @@ export const requestSwagger = (mainWindow: BrowserWindow | null): void => {
         client.on('response', (response) => {
             console.log(response.statusCode);
             let responseData = '';
-            response.on('data', (data) => {
-                responseData += data;
-            });
             response.on('end', () => {
                 if (response.statusCode === 200)
                     event.sender.send(requestSwaggerEvent, JSON.parse(responseData));
             });
+            response.on('data', (data) => {
+                responseData += data;
+            });
+
         });
 
         client.on(errorEvent, (err) => {

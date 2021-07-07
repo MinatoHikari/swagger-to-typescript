@@ -10,6 +10,7 @@ interface ElectronApi {
     readonly sendSync: (channel: string, data?: any) => any;
     readonly receive: (channel: string, listener: (...args: any) => void) => symbol;
     readonly invoke: (channel: string, listenerSymbol: symbol) => void;
+    readonly copy: (str: string) => Promise<void>;
 }
 
 declare interface Window {
