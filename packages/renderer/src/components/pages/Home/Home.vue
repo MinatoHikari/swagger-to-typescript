@@ -96,7 +96,7 @@ export default defineComponent({
         });
         const formRef = ref<InstanceType<typeof NForm> | null>(null);
         const source = ref({});
-
+        
         provide(SwaggerApiResultKey, source);
 
         const requestListener = (data: SwaggerApiResult) => {
@@ -115,6 +115,8 @@ export default defineComponent({
 
         const request = async () => {
             listRef.value && (listRef.value.innerCardRefs.length = 0);
+            clearSearch();
+
             loading.value = true;
             if (formRef.value) {
                 formRef.value?.validate((errors) => {

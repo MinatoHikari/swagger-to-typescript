@@ -27,7 +27,7 @@ export const useReceiver = (channel: string, func: (...args: any) => any) => {
         if (invoked) {
             restore();
         }
-    });
+    }, vm);
 
     onDeactivated(() => {
         if (!invoked) {

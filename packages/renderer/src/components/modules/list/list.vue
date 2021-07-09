@@ -46,13 +46,10 @@
                                     <n-gi span="18">
                                         <n-tag style="margin-right: 12px">{{ method }}</n-tag>
                                         <span v-if="matchSearch([path.toString()])">
-                                            <span>
-                                                {{ path.toString().split(searchValCache)[0] }}
-                                            </span>
-                                            <span style="color: #f2a531">{{ searchValCache }}</span>
-                                            <span>
-                                                {{ path.toString().split(searchValCache)[1] }}
-                                            </span>
+                                            <TextSpliter
+                                                :split-str="searchValCache"
+                                                :content="path.toString()"
+                                            />
                                         </span>
                                         <span v-else>{{ path }}</span>
                                     </n-gi>
@@ -70,23 +67,10 @@
                                                     matchSearch([getMethod(mths, method).summary])
                                                 "
                                             >
-                                                <span>
-                                                    {{
-                                                        getMethod(mths, method).summary.split(
-                                                            searchValCache,
-                                                        )[0]
-                                                    }}
-                                                </span>
-                                                <span style="color: #f2a531">
-                                                    {{ searchValCache }}
-                                                </span>
-                                                <span>
-                                                    {{
-                                                        getMethod(mths, method).summary.split(
-                                                            searchValCache,
-                                                        )[1]
-                                                    }}
-                                                </span>
+                                                <TextSpliter
+                                                    :split-str="searchValCache"
+                                                    :content="getMethod(mths, method).summary"
+                                                />
                                             </span>
                                             <span v-else>
                                                 {{ getMethod(mths, method).summary }}
@@ -119,9 +103,11 @@ import { useSearchResult } from '/@/components/pages/Home/useSearch';
 import type { NCard } from 'naive-ui';
 import type { ComponentPublicInstance } from '@vue/runtime-core';
 import { useHelper } from '/@/components/modules/list/useHelper';
+import TextSpliter from '../textSpliter.vue';
 
 export default defineComponent({
     name: 'List',
+    components: { TextSpliter },
     setup() {
         const router = useRouter();
         const store = useSwaggerStore();

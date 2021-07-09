@@ -4,22 +4,22 @@ import Home from '/@/components/pages/Home/Home.vue';
 const routes = [
     {
         path: '/',
-        name: 'Home',
+        name: 'HomePage',
         component: Home,
     },
     {
         path: '/about',
-        name: 'About',
+        name: 'AboutPage',
         component: () => import('/@/components/About.vue'),
     },
     {
         path: '/methodDetail',
-        name: 'MethodDetail',
+        name: 'MethodDetailPage',
         component: () => import('/@/components/pages/MethodDetail/MethodDetail.vue'),
     },
     {
         path: '/definition/:name',
-        name: 'Definition',
+        name: 'DefinitionPage',
         component: () => import('/@/components/pages/Definition/Definition.vue'),
     },
 ];

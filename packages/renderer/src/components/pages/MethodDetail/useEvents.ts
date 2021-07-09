@@ -38,6 +38,8 @@ export const useEvents = () => {
         const structList: string[] = [];
         let str = '';
 
+        str += `// ${list[0].in}\n`;
+
         if (e.structName.value) {
             str += `${getStructName(e.structName)} {\n`;
         } else {

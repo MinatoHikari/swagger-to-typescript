@@ -4,14 +4,14 @@
             <div style="display: flex; justify-content: space-between; width: 100%">
                 <div>
                     <n-input-number
-                        v-model:value="value"
+                        v-model:value="computedVal"
                         style="width: 60px; display: inline-block; margin-right: 12px"
                         size="small"
-                        :min="1"
+                        :min="searchMatchElListLength ? 1 : 0"
                         :max="searchMatchElListLength"
                         placeholder=""
                         :show-button="false"
-                        @keyup.enter="$emit('scroll-to', value - 1)"
+                        @keyup.enter="$emit('scroll-to', computedVal - 1)"
                     />
                     <span style="margin-right: 12px">/ {{ searchMatchElListLength }}</span>
                 </div>
@@ -20,7 +20,7 @@
                         ghost
                         type="primary"
                         size="small"
-                        @click="$emit('scroll-to', value - 1)"
+                        @click="$emit('scroll-to', computedVal - 1)"
                     >
                         go
                     </n-button>
@@ -106,7 +106,7 @@
 <script>
 import { ChevronUp, ChevronDown, CloseOutline, SearchOutline } from '@vicons/ionicons5';
 import { useSearchInjection } from '../pages/Home/useSearch';
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 export default {
     name: 'SearchNavigator',
     components: {
@@ -126,11 +126,19 @@ export default {
             value.value = val + 1;
         });
 
+        const computedVal = computed({
+            get: () => (searchMatchElListLength.value === 0 ? 0 : value.value),
+            set: (val) => {
+                if (!val) value.value = searchMatchElListLength.value ? 1 : 0;
+                value.value = Number(val) || 0;
+            },
+        });
+
         return {
             searchValCache,
             searchMatchElListLength,
             currentResultIndex,
-            value,
+            computedVal,
         };
     },
 };

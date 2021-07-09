@@ -20,7 +20,7 @@
         :on-clickoutside="onClickOutside"
         @select="select"
     />
-    <n-back-top :right="10" :bottom="20" :show="y > 180">
+    <n-back-top :right="10" :bottom="20" :show="ScrollY > 180">
         <n-icon size="24">
             <ArrowUpload20Regular />
         </n-icon>
@@ -46,11 +46,11 @@ export default defineComponent({
     setup() {
         const contextMenu = useContextMenu();
 
-        const { y } = useWindowScroll();
+        const { y: ScrollY } = useWindowScroll();
 
         return {
             ...contextMenu,
-            y,
+            ScrollY,
         };
     },
 });

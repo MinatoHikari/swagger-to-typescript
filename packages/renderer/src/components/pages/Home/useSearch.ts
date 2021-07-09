@@ -109,9 +109,10 @@ export const useSearchResult = (
         useSearchInjection();
 
     const matchSearch = (strList: string[]) => {
+        if (!searchValCache.value) return false;
         let result = false;
         for (const str of strList) {
-            if (str.search(searchValCache.value) > 0) result = true;
+            if (str.includes(searchValCache.value)) result = true;
         }
         return result;
     };
