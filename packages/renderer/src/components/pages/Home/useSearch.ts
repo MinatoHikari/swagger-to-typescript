@@ -1,4 +1,4 @@
-import type { InjectionKey, Ref } from 'vue';
+import type { InjectionKey, Ref, ComponentInternalInstance } from 'vue';
 import { inject, nextTick, provide, readonly, ref, watch } from 'vue';
 import type { ComponentPublicInstance } from '@vue/runtime-core';
 import type { NInput } from 'naive-ui';
@@ -103,7 +103,9 @@ export const useSearchInjection = () => {
 };
 
 export const useSearchResult = (
-    elList: Ref<{ el: ComponentPublicInstance | null; path: string; summary: string }[]>,
+    elList: Ref<
+        { el: ComponentInternalInstance | Element | null; path: string; summary: string }[]
+    >,
 ) => {
     const { searchValCache, setSearchMatchListLength, setCurrentResultIndex, currentResultIndex } =
         useSearchInjection();
@@ -182,7 +184,11 @@ export const useSearchResult = (
     watch(searchValCache, () => {
         setCurrentResultIndex(0);
 
-        searchMatchElList.value = elList.value.filter((i) => matchSearch([i.summary, i.path]));
+        searchMatchElList.value = elList.value.filter((i) => matchSearch([i.summary, i.path])) as {
+            el: ComponentPublicInstance;
+            path: string;
+            summary: string;
+        }[];
         setSearchMatchListLength(searchMatchElList.value.length);
 
         const total = ref(0);

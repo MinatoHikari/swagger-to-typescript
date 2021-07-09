@@ -88,7 +88,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, onBeforeUpdate, ref, watch } from 'vue';
+import type {ComponentInternalInstance} from 'vue';
+import { defineComponent, inject, onBeforeUpdate, ref, watch} from 'vue';
 import { SwaggerApiResultKey } from '../../../../types/home';
 import type {
     SwaggerApiResult,
@@ -127,10 +128,10 @@ export default defineComponent({
         const tags = ref(new Map<string, SwaggerPath>());
 
         const innerCardRefs = ref<
-            { el: ComponentPublicInstance | null; path: string; summary: string }[]
+            { el: ComponentInternalInstance | Element | null; path: string; summary: string }[]
         >([]);
 
-        const setRefList = (el: ComponentPublicInstance | null, path: string, summary: string) => {
+        const setRefList = (el: ComponentInternalInstance | Element | null, path: string, summary: string) => {
             if (el)
                 innerCardRefs.value.push({
                     el,
