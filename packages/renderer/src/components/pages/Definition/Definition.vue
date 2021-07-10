@@ -12,9 +12,11 @@
                     <Copier @copy="(e) => copyType(e, propertiesList)" />
 
                     <n-data-table
+                        v-model:checked-row-keys="checkedRowKeys"
                         style="margin-top: 12px"
                         :columns="columns"
                         :data="propertiesList"
+                        :row-key="useRowKey"
                     />
                 </n-card>
             </n-gi>
@@ -25,10 +27,10 @@
 <script lang="tsx">
 import { computed, defineComponent, ref, toRefs } from 'vue';
 import { useRoute } from 'vue-router';
-import { usePropertiesList, useUtils } from '/@/use/utils';
+import { usePropertiesList, useTable, useUtils } from '/@/use/utils';
 import { useSwaggerStore } from '/@/store/swagger';
 import type { SwaggerDefinition, SwaggerDefinitionProperty } from '../../../../../../types/swagger';
-import { useColumns } from '/@/components/pages/Definition/useColumns';
+import { useColumns } from '/@/components/pages/Definition/useTable';
 import Copier from '/@/components/modules/copier.vue';
 import { useEvents } from '/@/components/pages/Definition/useEvents';
 
@@ -52,11 +54,15 @@ export default defineComponent({
 
         const { copyType } = useEvents(name.value, definitionData.required);
 
+        const { checkedRowKeys, useRowKey } = useTable();
+
         return {
             name,
             propertiesList,
             columns,
             copyType,
+            useRowKey,
+            checkedRowKeys,
         };
     },
 });

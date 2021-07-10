@@ -68,5 +68,8 @@ export const useColumns = (requiredList: string[] | undefined) => {
             title: 'Description',
             key: 'description',
         },
+        {
+            type: 'selection',
+        },
     ];
 };

@@ -2,6 +2,7 @@ import type { SwaggerParams } from '../../../../../../types/swagger';
 import { buttonDark } from 'naive-ui';
 import { useUtils } from '/@/use/utils';
 import { useRouter } from 'vue-router';
+import { ref } from 'vue';
 
 export const useColumns = () => {
     const { getDefinitionName, baseTypeMap } = useUtils();
@@ -51,6 +52,9 @@ export const useColumns = () => {
         {
             title: 'Description',
             key: 'description',
+        },
+        {
+            type: 'selection',
         },
     ];
 };

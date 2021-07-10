@@ -1,4 +1,5 @@
-import { computed, ref } from 'vue';
+import type { Ref, UnwrapRef } from 'vue';
+import { computed, ref, unref, isReactive } from 'vue';
 import type {
     SwaggerDefinition,
     SwaggerDefinitionProperty,
@@ -41,11 +42,16 @@ export const useUtils = () => {
         }
     };
 
+    const filterTable = <T extends { name: string }>(list: T[], checkedKeys: string[]) => {
+        return list.filter((i) => !checkedKeys.includes(i.name));
+    };
+
     return {
         getDefinitionName,
         baseTypeMap,
         getParamsType,
         getDefinitionChildType,
+        filterTable,
     };
 };
 
@@ -60,4 +66,11 @@ export const usePropertiesList = (definitionData: SwaggerDefinition) => {
         }
         return list;
     });
+};
+
+export const useTable = () => {
+    const useRowKey = (row: SwaggerParams) => row.name;
+    const checkedRowKeys = ref<string[]>([]);
+
+    return { useRowKey, checkedRowKeys };
 };

@@ -96,7 +96,7 @@ export default defineComponent({
         });
         const formRef = ref<InstanceType<typeof NForm> | null>(null);
         const source = ref({});
-        
+
         provide(SwaggerApiResultKey, source);
 
         const requestListener = (data: SwaggerApiResult) => {

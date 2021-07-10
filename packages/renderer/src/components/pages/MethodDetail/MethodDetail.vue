@@ -33,6 +33,9 @@
                                     content: 'hard',
                                 }"
                             >
+                                <template #header-extra>
+                                    <n-tag type="info">check for excluded rows</n-tag>
+                                </template>
                                 <n-collapse>
                                     <n-collapse-item
                                         v-for="(table, index) in splitRequestParamsList"
@@ -40,12 +43,22 @@
                                         :title="table[0].in"
                                         :name="table[0].in"
                                     >
-                                        <Copier @copy="(e) => copyType(e, table)" />
+                                        <Copier
+                                            @copy="
+                                                (e) =>
+                                                    copyType(
+                                                        e,
+                                                        filterTable(table, checkedRequestRowKeys),
+                                                    )
+                                            "
+                                        />
 
                                         <n-data-table
+                                            v-model:checked-row-keys="checkedRequestRowKeys"
                                             style="margin-top: 12px"
                                             :columns="columns"
                                             :data="table"
+                                            :row-key="useRowKey"
                                         />
                                     </n-collapse-item>
                                 </n-collapse>
@@ -68,14 +81,23 @@
                                     >
                                         <Copier
                                             @copy="
-                                                (e) => responseType.copyType(e, responseType.table)
+                                                (e) =>
+                                                    responseType.copyType(
+                                                        e,
+                                                        filterTable(
+                                                            unref(responseType.table),
+                                                            checkedResponseRowKeys,
+                                                        ),
+                                                    )
                                             "
                                         />
 
                                         <n-data-table
+                                            v-model:checked-row-keys="checkedResponseRowKeys"
                                             style="margin-top: 12px"
                                             :columns="responseType.columns"
                                             :data="responseType.table"
+                                            :row-key="useRowKey"
                                         />
                                     </n-collapse-item>
                                 </n-collapse>
@@ -89,12 +111,12 @@
 </template>
 
 <script lang="tsx">
-import type { Ref } from 'vue';
-import { computed, defineComponent, ref, toRefs } from 'vue';
+import type { Ref, ComputedRef, UnwrapRef } from 'vue';
+import { computed, defineComponent, isReactive, ref, toRefs, unref } from 'vue';
 import { useSwaggerStore } from '/@/store/swagger';
-import { usePropertiesList, useUtils } from '/@/use/utils';
-import { useColumns } from '/@/components/pages/MethodDetail/useColumns';
-import { useColumns as useResponseDefinitionColumns } from '../Definition/useColumns';
+import { usePropertiesList, useTable, useUtils } from '/@/use/utils';
+import { useColumns } from '/@/components/pages/MethodDetail/useTable';
+import { useColumns as useResponseDefinitionColumns } from '../Definition/useTable';
 import type { SwaggerDefinition, SwaggerParams } from '../../../../../../types/swagger';
 import { useEvents } from '/@/components/pages/MethodDetail/useEvents';
 import { useEvents as useDefinitionEvents } from '/@/components/pages/Definition/useEvents';
@@ -109,16 +131,17 @@ export default defineComponent({
     setup() {
         const store = useSwaggerStore();
 
-        const { getDefinitionName } = useUtils();
-
-        console.log(store.$state);
+        const { getDefinitionName, filterTable } = useUtils();
 
         const responseTypeList: Ref<
             {
                 code: string;
-                table: Ref<(SwaggerDefinitionProperty & { name: string })[]>;
+                table: ComputedRef<(SwaggerDefinitionProperty & { name: string })[]>;
                 columns: any[];
-                copyType: (...args: any) => void;
+                copyType: (
+                    e: { structName: Ref<string>; isPartial: Ref<boolean> },
+                    list: ({ name: string } & SwaggerDefinitionProperty)[],
+                ) => void;
             }[]
         > = ref([]);
         for (let item in store.data.responses) {
@@ -163,6 +186,9 @@ export default defineComponent({
 
         const { copyType } = useEvents();
 
+        const { checkedRowKeys: checkedRequestRowKeys, useRowKey } = useTable();
+        const { checkedRowKeys: checkedResponseRowKeys } = useTable();
+
         return {
             ...toRefs(store.$state),
             splitRequestParamsList,
@@ -170,6 +196,11 @@ export default defineComponent({
             columns,
             copyType,
             responseTypeList,
+            checkedRequestRowKeys,
+            checkedResponseRowKeys,
+            filterTable,
+            useRowKey,
+            unref,
         };
     },
 });
