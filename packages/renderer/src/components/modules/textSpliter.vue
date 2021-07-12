@@ -1,5 +1,5 @@
 <template>
-    <span v-if="content === splitStr" :style="colorStyle" />
+    <span v-if="content === splitStr" :style="colorStyle">{{ content }}</span>
     <span v-for="(str, index) in strArr" v-else :key="index + str">
         <span>{{ str }}</span>
         <span v-if="index !== strArr.length - 1" :style="colorStyle">{{ splitStr }}</span>

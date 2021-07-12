@@ -33,9 +33,6 @@
                                     content: 'hard',
                                 }"
                             >
-                                <template #header-extra>
-                                    <n-tag type="info">check for excluded rows</n-tag>
-                                </template>
                                 <n-collapse>
                                     <n-collapse-item
                                         v-for="(table, index) in splitRequestParamsList"
