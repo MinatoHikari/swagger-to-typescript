@@ -17,7 +17,6 @@ export default defineComponent({
     name: 'About',
     setup() {
         const { versions } = useElectron();
-        // It makes no sense to make "versions" reactive
         return { versions: computed(() => versions || {}) };
     },
 });

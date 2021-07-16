@@ -82,7 +82,8 @@ export default defineComponent({
     setup() {
         const message = useMessage();
 
-        const { listRef, scrollToTargetIndex, scrollToNext, scrollToPref } = useList();
+        const { listRef, scrollToTargetIndex, scrollToNext, scrollToPref, clearListRef } =
+            useList();
 
         const requestInputRef = ref<InstanceType<typeof NInput> | null>(null);
 
@@ -114,7 +115,7 @@ export default defineComponent({
         useReceiver(errorEvent, errListener);
 
         const request = async () => {
-            listRef.value && (listRef.value.innerCardRefs.length = 0);
+            clearListRef();
             clearSearch();
 
             loading.value = true;
@@ -160,7 +161,6 @@ export default defineComponent({
 });
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 a {
     color: #42b983;

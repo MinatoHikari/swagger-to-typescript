@@ -88,8 +88,16 @@
 </template>
 
 <script lang="ts">
-import type {ComponentInternalInstance} from 'vue';
-import { defineComponent, inject, onBeforeUpdate, ref, watch} from 'vue';
+import type { ComponentInternalInstance } from 'vue';
+import {
+    defineComponent,
+    inject,
+    onBeforeUpdate,
+    onRenderTracked,
+    onUpdated,
+    ref,
+    watch,
+} from 'vue';
 import { SwaggerApiResultKey } from '../../../../types/home';
 import type {
     SwaggerApiResult,
@@ -127,24 +135,30 @@ export default defineComponent({
 
         const tags = ref(new Map<string, SwaggerPath>());
 
-        const innerCardRefs = ref<
-            { el: ComponentInternalInstance | Element | null; path: string; summary: string }[]
-        >([]);
+        const innerCardRefsMap = ref<
+            Map<
+                string,
+                { el: ComponentInternalInstance | Element | null; path: string; summary: string }
+            >
+        >(new Map());
 
-        const setRefList = (el: ComponentInternalInstance | Element | null, path: string, summary: string) => {
-            if (el)
-                innerCardRefs.value.push({
+        const setRefList = (
+            el: ComponentInternalInstance | Element | null,
+            path: string,
+            summary: string,
+        ) => {
+            if (el) {
+                innerCardRefsMap.value.set(path, {
                     el,
                     path,
                     summary,
                 });
+            }
         };
 
         watch(
             source,
             (val) => {
-                console.log(innerCardRefs.value);
-
                 tags.value = new Map<string, SwaggerPath>();
                 for (let item of val.tags) {
                     tags.value.set(item.name, {});
@@ -182,7 +196,7 @@ export default defineComponent({
             scrollToNextResult,
             scrollToPrevResult,
             scrollToTargetIndex,
-        } = useSearchResult(innerCardRefs);
+        } = useSearchResult(innerCardRefsMap);
 
         const toDetail = (
             title: string,
@@ -209,7 +223,7 @@ export default defineComponent({
             toDetail,
             searchValCache,
             matchSearch,
-            innerCardRefs,
+            innerCardRefsMap,
             setRefList,
             scrollToNextResult,
             scrollToPrevResult,

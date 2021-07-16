@@ -3,6 +3,9 @@ import type List from '/@/components/modules/list/list.vue';
 
 export const useList = () => {
     const listRef = ref<InstanceType<typeof List> | null>(null);
+    const clearListRef = () => {
+        listRef.value && listRef.value.innerCardRefsMap.clear();
+    };
     const scrollToPref = () => listRef.value?.scrollToPrevResult();
     const scrollToNext = () => listRef.value?.scrollToNextResult();
     const scrollToTargetIndex = (e: number) => listRef.value?.scrollToTargetIndex(e);
@@ -12,5 +15,6 @@ export const useList = () => {
         scrollToPref,
         scrollToNext,
         scrollToTargetIndex,
+        clearListRef,
     };
 };

@@ -4,6 +4,7 @@ import type { ComponentPublicInstance } from '@vue/runtime-core';
 import type { NInput } from 'naive-ui';
 import { useReceiver } from '/@/use/electron';
 import { closeSearchShortcut, searchShortcut } from '../../../../../common/events';
+import List from '/@/components/modules/list/list.vue';
 
 export type SearchMatchList = {
     el: ComponentPublicInstance | null;
@@ -103,8 +104,11 @@ export const useSearchInjection = () => {
 };
 
 export const useSearchResult = (
-    elList: Ref<
-        { el: ComponentInternalInstance | Element | null; path: string; summary: string }[]
+    elMap: Ref<
+        Map<
+            string,
+            { el: ComponentInternalInstance | Element | null; path: string; summary: string }
+        >
     >,
 ) => {
     const { searchValCache, setSearchMatchListLength, setCurrentResultIndex, currentResultIndex } =
@@ -184,11 +188,17 @@ export const useSearchResult = (
     watch(searchValCache, () => {
         setCurrentResultIndex(0);
 
-        searchMatchElList.value = elList.value.filter((i) => matchSearch([i.summary, i.path])) as {
-            el: ComponentPublicInstance;
-            path: string;
-            summary: string;
-        }[];
+        searchMatchElList.value.length = 0;
+        elMap.value.forEach((value, key, map) => {
+            if (matchSearch([value.summary, value.path]))
+                searchMatchElList.value.push(
+                    value as {
+                        el: ComponentPublicInstance;
+                        path: string;
+                        summary: string;
+                    },
+                );
+        });
         setSearchMatchListLength(searchMatchElList.value.length);
 
         const total = ref(0);
