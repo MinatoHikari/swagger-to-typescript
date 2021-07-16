@@ -19,6 +19,7 @@
                                     setCardRefWrapper(
                                         path.toString(),
                                         getMethod(mths, method).summary,
+                                        method,
                                     )
                                 "
                                 size="small"
@@ -146,9 +147,10 @@ export default defineComponent({
             el: ComponentInternalInstance | Element | null,
             path: string,
             summary: string,
+            method: string,
         ) => {
             if (el) {
-                innerCardRefsMap.value.set(path, {
+                innerCardRefsMap.value.set(`${path}____${method}`, {
                     el,
                     path,
                     summary,
