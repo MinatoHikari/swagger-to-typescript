@@ -139,12 +139,12 @@ export default defineComponent({
         const innerCardRefsMap = ref<
             Map<
                 string,
-                { el: ComponentInternalInstance | Element | null; path: string; summary: string }
+                { el: ComponentPublicInstance | Element | null; path: string; summary: string }
             >
         >(new Map());
 
         const setRefList = (
-            el: ComponentInternalInstance | Element | null,
+            el: ComponentPublicInstance | Element | null,
             path: string,
             summary: string,
             method: string,

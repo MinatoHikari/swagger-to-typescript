@@ -4,7 +4,7 @@ import type { ComponentInternalInstance, Ref } from 'vue';
 
 export const useHelper = (
     setRefList: (
-        el: ComponentInternalInstance | Element | null,
+        el: ComponentPublicInstance | Element | null,
         path: string,
         summary: string,
         method: string,
@@ -16,7 +16,7 @@ export const useHelper = (
     const getMethod = (methods: SwaggerMethod, key: string) => methods[key as keyof SwaggerMethod];
     const setCardRefWrapper =
         (path: string, summary: string, method: string) =>
-        (el: ComponentInternalInstance | Element | null) => {
+        (el: ComponentPublicInstance | Element | null) => {
             setRefList(el, path, summary, method);
         };
 

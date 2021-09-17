@@ -107,7 +107,7 @@ export const useSearchResult = (
     elMap: Ref<
         Map<
             string,
-            { el: ComponentInternalInstance | Element | null; path: string; summary: string }
+            { el: ComponentPublicInstance | Element | null; path: string; summary: string }
         >
     >,
 ) => {
