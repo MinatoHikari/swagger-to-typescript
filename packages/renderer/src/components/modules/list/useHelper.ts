@@ -1,4 +1,4 @@
-import type { SwaggerMethod, SwaggerPath } from '../../../../../../types/swagger';
+import type { SwaggerMethod, SwaggerPath } from '../../../../../common/swagger';
 import type { ComponentPublicInstance } from '@vue/runtime-core';
 import type { ComponentInternalInstance, Ref } from 'vue';
 

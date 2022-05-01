@@ -5,7 +5,7 @@ import type {
     SwaggerDefinitionProperty,
     SwaggerParameter,
     SwaggerParams,
-} from '../../../../types/swagger';
+} from '../../../common/swagger';
 
 export const useUtils = () => {
     const getDefinitionName = ($ref: string) => {

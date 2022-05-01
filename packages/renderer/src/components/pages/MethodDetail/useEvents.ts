@@ -1,4 +1,4 @@
-import type { SwaggerParams } from '../../../../../../types/swagger';
+import type { SwaggerParams } from '../../../../../common/swagger';
 import { useUtils } from '/@/use/utils';
 import { useElectron } from '/@/use/electron';
 import { useMessage } from 'naive-ui';

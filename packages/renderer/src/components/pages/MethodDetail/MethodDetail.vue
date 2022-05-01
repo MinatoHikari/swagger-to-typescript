@@ -114,11 +114,11 @@ import { useSwaggerStore } from '/@/store/swagger';
 import { usePropertiesList, useTable, useUtils } from '/@/use/utils';
 import { useColumns } from '/@/components/pages/MethodDetail/useTable';
 import { useColumns as useResponseDefinitionColumns } from '../Definition/useTable';
-import type { SwaggerDefinition, SwaggerParams } from '../../../../../../types/swagger';
+import type { SwaggerDefinition, SwaggerParams } from '../../../../../common/swagger';
 import { useEvents } from '/@/components/pages/MethodDetail/useEvents';
 import { useEvents as useDefinitionEvents } from '/@/components/pages/Definition/useEvents';
 import Copier from '/@/components/modules/copier.vue';
-import type { SwaggerDefinitionProperty } from '../../../../../../types/swagger';
+import type { SwaggerDefinitionProperty } from '../../../../../common/swagger';
 
 export default defineComponent({
     name: 'MethodDetail',

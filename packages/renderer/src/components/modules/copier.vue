@@ -9,7 +9,7 @@
                 <n-tooltip>
                     check for excluded rows
                     <template #trigger>
-                        <n-icon style="position: relative;top: 2px" size="20px">
+                        <n-icon style="position: relative; top: 2px" size="20px">
                             <QuestionCircle24Regular />
                         </n-icon>
                     </template>
@@ -24,7 +24,7 @@ import { defineComponent, ref } from 'vue';
 import { QuestionCircle24Regular } from '@vicons/fluent';
 
 export default defineComponent({
-    name: 'Copier',
+    name: 'CopierComponent',
     components: {
         QuestionCircle24Regular,
     },

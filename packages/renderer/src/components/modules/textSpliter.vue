@@ -26,7 +26,7 @@ export default defineComponent({
         },
     },
     setup(props) {
-        const strArr = computed(() =>
+        const strArr = computed<string[]>(() =>
             props.splitStr ? props.content.split(props.splitStr) : [props.content],
         );
 

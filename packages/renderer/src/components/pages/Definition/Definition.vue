@@ -9,7 +9,9 @@
                         content: 'hard',
                     }"
                 >
-                    <Copier @copy="(e) => copyType(e, propertiesList)" />
+                    <Copier
+                        @copy="(e) => copyType(e, filterTable(propertiesList, checkedRowKeys))"
+                    />
 
                     <n-data-table
                         v-model:checked-row-keys="checkedRowKeys"
@@ -29,13 +31,13 @@ import { computed, defineComponent, ref, toRefs } from 'vue';
 import { useRoute } from 'vue-router';
 import { usePropertiesList, useTable, useUtils } from '/@/use/utils';
 import { useSwaggerStore } from '/@/store/swagger';
-import type { SwaggerDefinition, SwaggerDefinitionProperty } from '../../../../../../types/swagger';
+import type { SwaggerDefinition, SwaggerDefinitionProperty } from '../../../../../common/swagger';
 import { useColumns } from '/@/components/pages/Definition/useTable';
 import Copier from '/@/components/modules/copier.vue';
 import { useEvents } from '/@/components/pages/Definition/useEvents';
 
 export default defineComponent({
-    name: 'Definition',
+    name: 'DefinitionPage',
     components: {
         Copier,
     },
@@ -56,6 +58,8 @@ export default defineComponent({
 
         const { checkedRowKeys, useRowKey } = useTable();
 
+        const { filterTable } = useUtils();
+
         return {
             name,
             propertiesList,
@@ -63,6 +67,7 @@ export default defineComponent({
             copyType,
             useRowKey,
             checkedRowKeys,
+            filterTable,
         };
     },
 });

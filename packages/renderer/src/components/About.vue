@@ -14,7 +14,7 @@
 import { computed, defineComponent } from 'vue';
 import { useElectron } from '/@/use/electron';
 export default defineComponent({
-    name: 'About',
+    name: 'AboutPage',
     setup() {
         const { versions } = useElectron();
         return { versions: computed(() => versions || {}) };

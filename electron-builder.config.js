@@ -14,9 +14,6 @@ const config = {
     extraMetadata: {
         version: buildVersion,
     },
-    win: {
-        target: 'portable',
-    },
 };
 
 module.exports = config;

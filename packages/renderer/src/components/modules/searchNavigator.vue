@@ -33,10 +33,9 @@
         class="search-navigator"
         vertical
     >
-        <n-tooltip placement="left" trigger="hover">
+        <n-tooltip v-if="searchValCache" placement="left" trigger="hover">
             <template #trigger>
                 <n-button
-                    v-if="searchValCache"
                     size="small"
                     style="background-color: white"
                     class="search-navigator-item"
@@ -48,12 +47,11 @@
                     </n-icon>
                 </n-button>
             </template>
-            scroll to prev result
+            <template #default>scroll to prev result</template>
         </n-tooltip>
-        <n-tooltip placement="left" trigger="hover">
+        <n-tooltip v-if="searchValCache" placement="left" trigger="hover">
             <template #trigger>
                 <n-button
-                    v-if="searchValCache"
                     size="small"
                     style="background-color: white"
                     class="search-navigator-item"
@@ -83,10 +81,9 @@
             </template>
             search
         </n-tooltip>
-        <n-tooltip placement="left" trigger="hover">
+        <n-tooltip v-if="searchValCache" placement="left" trigger="hover">
             <template #trigger>
                 <n-button
-                    v-if="searchValCache"
                     size="small"
                     style="background-color: white"
                     class="search-navigator-item"

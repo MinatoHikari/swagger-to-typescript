@@ -64,7 +64,7 @@ import { useElectron, useReceiver } from '/@/use/electron';
 import type { NForm, NInput } from 'naive-ui';
 import { useMessage } from 'naive-ui';
 import List from '../../modules/list/list.vue';
-import type { SwaggerApiResult } from '../../../../../../types/swagger';
+import type { SwaggerApiResult } from '../../../../../common/swagger';
 import { SwaggerApiResultKey } from '../../../../types/home';
 import { errorEvent, requestSwaggerEvent } from '../../../../../common/events';
 import { useSearch } from '/@/components/pages/Home/useSearch';
@@ -74,7 +74,7 @@ import { useList } from '/@/components/pages/Home/useList';
 const { send, invoke } = useElectron();
 
 export default defineComponent({
-    name: 'Home',
+    name: 'HomePage',
     components: {
         List,
         SearchNavigator,

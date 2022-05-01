@@ -92,6 +92,7 @@
 import type { ComponentInternalInstance } from 'vue';
 import {
     defineComponent,
+    getCurrentInstance,
     inject,
     onBeforeUpdate,
     onRenderTracked,
@@ -105,8 +106,8 @@ import type {
     SwaggerDefinitions,
     SwaggerMethod,
     SwaggerPath,
-} from '../../../../../../types/swagger';
-import type { SwaggerMethodsProperty } from '/@/../../../types/swagger';
+} from '../../../../../common/swagger';
+import type { SwaggerMethodsProperty } from '../../../../../common/swagger';
 import { useRouter } from 'vue-router';
 import { useSwaggerStore } from '/@/store/swagger';
 import { useSearchResult } from '/@/components/pages/Home/useSearch';
@@ -116,7 +117,7 @@ import { useHelper } from '/@/components/modules/list/useHelper';
 import TextSpliter from '../textSpliter.vue';
 
 export default defineComponent({
-    name: 'List',
+    name: 'ListComponent',
     components: { TextSpliter },
     setup() {
         const router = useRouter();

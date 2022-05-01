@@ -1,4 +1,4 @@
-import type { SwaggerParams } from '../../../../../../types/swagger';
+import type { SwaggerParams } from '../../../../../common/swagger';
 import { buttonDark } from 'naive-ui';
 import { useUtils } from '/@/use/utils';
 import { useRouter } from 'vue-router';
