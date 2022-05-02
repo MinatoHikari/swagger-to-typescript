@@ -1,10 +1,7 @@
-import type { SwaggerParams } from '../../../../../common/swagger';
 import { useUtils } from '/@/use/utils';
 import { useElectron } from '/@/use/electron';
 import { useMessage } from 'naive-ui';
-import { useSwaggerStore } from '/@/store/swagger';
 import type { Ref } from 'vue';
-import { computed } from 'vue';
 import type { SwaggerDefinitionProperty } from '../../../../../common/swagger';
 
 export const useEvents = (oName: string, requiredList: string[] | undefined) => {

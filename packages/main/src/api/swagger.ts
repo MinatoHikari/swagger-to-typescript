@@ -7,10 +7,10 @@ import {
     requestApiSourcesEvent,
     requestSwaggerEvent,
 } from '../../../common/events';
-import type { StoreType } from '../store';
 import store from '../store';
-import type { HomeListItem } from '../../../renderer/src/components/pages/Home/useList';
 import IpcMainEvent = Electron.IpcMainEvent;
+import type {StoreType} from '../../../common/store';
+import type {HomeListItem} from '../../../common/pages';
 
 function initClient(
     client: Electron.ClientRequest,

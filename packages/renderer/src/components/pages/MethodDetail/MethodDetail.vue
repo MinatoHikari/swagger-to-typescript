@@ -20,7 +20,7 @@
                                 <span>{{ path }}</span>
                             </n-gi>
                             <n-gi style="font-size: 15px" span="6">
-                                <span>{{ data.summary }}</span>
+                                <span>{{ methodsProperty.summary }}</span>
                             </n-gi>
                         </n-grid>
                     </template>
@@ -119,6 +119,7 @@ import { useEvents } from '/@/components/pages/MethodDetail/useEvents';
 import { useEvents as useDefinitionEvents } from '/@/components/pages/Definition/useEvents';
 import Copier from '/@/components/modules/copier.vue';
 import type { SwaggerDefinitionProperty } from '../../../../../common/swagger';
+import { storeToRefs } from 'pinia';
 
 export default defineComponent({
     name: 'MethodDetail',
@@ -187,7 +188,7 @@ export default defineComponent({
         const { checkedRowKeys: checkedResponseRowKeys } = useTable();
 
         return {
-            ...toRefs(store.$state),
+            ...storeToRefs(store),
             splitRequestParamsList,
             getDefinitionName,
             columns,

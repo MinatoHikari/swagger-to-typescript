@@ -1,16 +1,10 @@
-import { ref } from 'vue';
-import { useElectron, useReceiver } from '/@/use/electron';
-import { electronStoreGetEvent, electronStoreSetEvent } from '../../../../../common/events';
-import type { StoreType } from '../../../../../main/src/store';
-import { useRouter } from 'vue-router';
-import { useSwaggerStore } from '/@/store/swagger';
-
-export type HomeListItem = {
-    type: 'default' | 'edit';
-    key: `${number}`;
-    name: string;
-    source: string;
-};
+import {ref} from 'vue';
+import {useElectron, useReceiver} from '/@/use/electron';
+import {electronStoreGetEvent, electronStoreSetEvent} from '../../../../../common/events';
+import type {StoreType} from '../../../../../common/store';
+import {useRouter} from 'vue-router';
+import {useSwaggerStore} from '/@/store/swagger';
+import type {HomeListItem} from '../../../../../common/pages';
 
 const { send, invoke } = useElectron();
 

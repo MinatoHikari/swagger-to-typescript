@@ -100,11 +100,11 @@
     </n-button-group>
 </template>
 
-<script>
+<script lang="ts">
 import { ChevronUp, ChevronDown, CloseOutline, SearchOutline } from '@vicons/ionicons5';
 import { useSearchInjection } from '../pages/Source/useSearch';
-import { computed, ref, watch } from 'vue';
-export default {
+import { computed, ref, watch ,defineComponent} from 'vue';
+export default defineComponent({
     name: 'SearchNavigator',
     components: {
         ChevronUp,
@@ -138,7 +138,7 @@ export default {
             computedVal,
         };
     },
-};
+});
 </script>
 
 <style scoped>
