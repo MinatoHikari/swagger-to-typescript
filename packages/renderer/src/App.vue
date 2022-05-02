@@ -3,7 +3,7 @@
     <NDialogProvider>
         <NMessageProvider>
             <router-view v-slot="{ Component, route }">
-                <keep-alive :include="['Home']">
+                <keep-alive :include="['SourcePage', 'HomePage']">
                     <component :is="Component" :key="route.path" />
                 </keep-alive>
             </router-view>

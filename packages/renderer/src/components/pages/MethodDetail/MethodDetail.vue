@@ -141,8 +141,8 @@ export default defineComponent({
                 ) => void;
             }[]
         > = ref([]);
-        for (let item in store.data.responses) {
-            const responseCodeItem = store.data.responses[item];
+        for (let item in store.methodsProperty.responses) {
+            const responseCodeItem = store.methodsProperty.responses[item];
             if (responseCodeItem.schema && responseCodeItem.schema.$ref) {
                 const definitionName = getDefinitionName(responseCodeItem.schema.$ref);
                 const responseType = store.definitionMap.get(definitionName);
@@ -169,7 +169,7 @@ export default defineComponent({
 
         const splitRequestParamsList = computed(() => {
             const result: Array<SwaggerParams[]> = [];
-            const sourceArr = store.data.parameters;
+            const sourceArr = store.methodsProperty.parameters;
             for (let i = 0; i < sourceArr.length; i++) {
                 if (i === 0 || sourceArr[i].in !== sourceArr[i - 1].in) {
                     result.push([] as SwaggerParams[]);

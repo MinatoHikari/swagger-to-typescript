@@ -7,8 +7,8 @@ export const useSwaggerStore = defineStore({
         title: '',
         method: '',
         path: '',
-        data: {} as SwaggerMethodsProperty,
+        sourceUrl: [] as string[],
+        methodsProperty: {} as SwaggerMethodsProperty,
         definitionMap: new Map<string, SwaggerDefinition>(),
     }),
 });
-

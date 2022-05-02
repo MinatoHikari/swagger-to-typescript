@@ -9,6 +9,7 @@ import {
     NListItem,
     NTag,
     NP,
+    NH5,
     NButtonGroup,
     NSpace,
     NForm,
@@ -23,7 +24,12 @@ import {
     NIcon,
     NTooltip,
     NInputNumber,
+    NInputGroupLabel,
+    NInputGroup,
     NBackTop,
+    NSkeleton,
+    NEllipsis,
+    NSelect,
 } from 'naive-ui';
 import type { App } from 'vue';
 
@@ -33,6 +39,8 @@ export const installNaive = (app: App<Element>): void => {
         components: [
             NButton,
             NInput,
+            NInputGroupLabel,
+            NInputGroup,
             NGrid,
             NGi,
             NCard,
@@ -40,6 +48,7 @@ export const installNaive = (app: App<Element>): void => {
             NListItem,
             NTag,
             NP,
+            NH5,
             NButtonGroup,
             NSpace,
             NForm,
@@ -55,6 +64,9 @@ export const installNaive = (app: App<Element>): void => {
             NTooltip,
             NInputNumber,
             NBackTop,
+            NSkeleton,
+            NEllipsis,
+            NSelect,
         ],
     });
 

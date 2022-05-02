@@ -3,6 +3,7 @@
         <n-gi span="11" offset="1">
             <n-button-group>
                 <n-button ghost @click="$router.push('/')">Home</n-button>
+                <n-button v-if="showSource" ghost @click="$router.push('/source')">Source</n-button>
                 <n-button round @click="$router.push('/about')">About</n-button>
             </n-button-group>
         </n-gi>
@@ -15,10 +16,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
+import { useSwaggerStore } from '/@/store/swagger';
 
 export default defineComponent({
     name: 'AppNavigation',
+    setup() {
+        const store = useSwaggerStore();
+
+        return {
+            showSource: computed(() => store.sourceUrl.length > 0),
+        };
+    },
 });
 </script>
 

@@ -1,168 +1,219 @@
 <template>
-    <div style="padding: 24px 0">
-        <n-grid x-gap="12" y-gap="1">
-            <n-gi span="16" offset="1">
-                <n-form ref="formRef" label-placement="left" :model="formData" :rules="rules">
-                    <n-form-item :label="'Request-Url'" path="url">
-                        <n-input
-                            ref="requestInputRef"
-                            v-model:value="formData.url"
-                            placeholder="swagger api-docs url"
-                            type="input"
-                            @keyup.enter="request"
-                        />
-                    </n-form-item>
-                </n-form>
-            </n-gi>
-            <n-gi span="7">
-                <n-button type="info" ghost @click="request">request</n-button>
-                <n-button style="margin-left: 12px" type="primary" ghost @click="showSearch">
-                    search
-                </n-button>
-            </n-gi>
-        </n-grid>
-        <n-grid style="margin-top: 24px">
-            <n-gi span="22" offset="1">
-                <List ref="listRef" />
-            </n-gi>
-        </n-grid>
-    </div>
-    <n-modal
-        v-model:show="searchVisible"
-        style="width: 450px"
-        preset="card"
-        size="small"
-        title="search"
-    >
+    <main style="padding: 24px 0">
         <n-grid x-gap="12">
-            <n-gi span="18">
-                <n-input
-                    ref="inputRef"
-                    v-model:value="searchVal"
-                    placeholder="input what you want to find"
-                    type="input"
-                    @keyup.enter="search"
-                />
-            </n-gi>
-            <n-gi span="6">
-                <n-button type="info" ghost @click="search">confirm</n-button>
+            <n-gi span="21" offset="1">
+                <n-grid x-gap="12" y-gap="12">
+                    <n-gi span="24">
+                        <n-grid x-gap="12" y-gap="12">
+                            <n-gi v-for="(item, index) in list" :key="item.key" span="12">
+                                <n-card>
+                                    <n-grid x-gap="12" y-gap="12">
+                                        <n-gi span="12">
+                                            <n-input-group v-if="item.type === 'edit'">
+                                                <n-input-group-label>Name</n-input-group-label>
+                                                <n-input
+                                                    v-model:value.trim="item.name"
+                                                    placeholder="custom name"
+                                                />
+                                            </n-input-group>
+                                            <n-input-group v-else>
+                                                <n-input-group-label>Name</n-input-group-label>
+                                                <n-tooltip>
+                                                    <template #trigger>
+                                                        <n-input-group-label
+                                                            style="
+                                                                background-color: white;
+                                                                max-width: 100%;
+                                                                pointer-events: auto;
+                                                            "
+                                                        >
+                                                            <n-ellipsis :tooltip="false">
+                                                                {{ item.name }}
+                                                            </n-ellipsis>
+                                                        </n-input-group-label>
+                                                    </template>
+                                                    {{ item.name }}
+                                                </n-tooltip>
+                                            </n-input-group>
+                                        </n-gi>
+                                        <n-gi style="text-align: right" span="12">
+                                            <n-button-group>
+                                                <n-button
+                                                    v-if="item.type === 'edit'"
+                                                    type="default"
+                                                    ghost
+                                                    @click="save(index)"
+                                                >
+                                                    <n-icon>
+                                                        <Save20Regular />
+                                                    </n-icon>
+                                                </n-button>
+                                                <n-button
+                                                    v-if="item.type === 'default'"
+                                                    type="default"
+                                                    ghost
+                                                    @click="edit(index)"
+                                                >
+                                                    <n-icon>
+                                                        <Edit />
+                                                    </n-icon>
+                                                </n-button>
+                                                <n-button
+                                                    type="default"
+                                                    ghost
+                                                    @click="enter(index)"
+                                                >
+                                                    <n-icon>
+                                                        <EnterOutline />
+                                                    </n-icon>
+                                                </n-button>
+                                                <n-button type="default" ghost>
+                                                    <n-icon><DeleteOff20Regular /></n-icon>
+                                                </n-button>
+                                            </n-button-group>
+                                        </n-gi>
+                                        <n-gi span="24">
+                                            <n-input-group v-if="item.type === 'edit'">
+                                                <n-input-group-label>Source</n-input-group-label>
+                                                <n-input
+                                                    v-model:value.trim="item.source"
+                                                    style="width: 60%"
+                                                    placeholder="http://example.com"
+                                                />
+                                                <n-input-group-label>
+                                                    /swagger-ui.html
+                                                </n-input-group-label>
+                                            </n-input-group>
+                                            <n-input-group v-else>
+                                                <n-input-group-label>Source</n-input-group-label>
+                                                <n-tooltip>
+                                                    <template #trigger>
+                                                        <n-input-group-label
+                                                            style="
+                                                                background-color: white;
+                                                                max-width: 60%;
+                                                                pointer-events: auto;
+                                                            "
+                                                        >
+                                                            <n-ellipsis :tooltip="false">
+                                                                {{ item.source }}
+                                                            </n-ellipsis>
+                                                        </n-input-group-label>
+                                                    </template>
+                                                    {{ item.source }}
+                                                </n-tooltip>
+                                                <n-input-group-label>
+                                                    /swagger-ui.html
+                                                </n-input-group-label>
+                                            </n-input-group>
+                                        </n-gi>
+                                    </n-grid>
+                                </n-card>
+                            </n-gi>
+                            <n-gi span="12">
+                                <n-card style="cursor: pointer" @click="add">
+                                    <n-grid x-gap="12" y-gap="12">
+                                        <n-gi span="8">
+                                            <n-grid x-gap="12" y-gap="12">
+                                                <n-gi span="24">
+                                                    <n-skeleton
+                                                        :animated="false"
+                                                        :width="0"
+                                                        :sharp="false"
+                                                        size="medium"
+                                                    />
+                                                </n-gi>
+                                                <n-gi span="24">
+                                                    <n-skeleton
+                                                        :animated="false"
+                                                        :width="0"
+                                                        :sharp="false"
+                                                        size="medium"
+                                                    />
+                                                </n-gi>
+                                            </n-grid>
+                                        </n-gi>
+                                        <n-gi span="8">
+                                            <n-space
+                                                style="height: 100%"
+                                                justify="center"
+                                                align="center"
+                                            >
+                                                <n-icon style="margin-top: 15px" size="50">
+                                                    <Add24Regular />
+                                                </n-icon>
+                                            </n-space>
+                                        </n-gi>
+                                        <n-gi span="8">
+                                            <n-grid x-gap="12" y-gap="12">
+                                                <n-gi span="24">
+                                                    <n-skeleton
+                                                        :animated="false"
+                                                        :width="0"
+                                                        :sharp="false"
+                                                        size="medium"
+                                                    />
+                                                </n-gi>
+                                                <n-gi span="24">
+                                                    <n-skeleton
+                                                        :animated="false"
+                                                        :width="0"
+                                                        :sharp="false"
+                                                        size="medium"
+                                                    />
+                                                </n-gi>
+                                            </n-grid>
+                                        </n-gi>
+                                    </n-grid>
+                                </n-card>
+                            </n-gi>
+                        </n-grid>
+                    </n-gi>
+                </n-grid>
             </n-gi>
         </n-grid>
-    </n-modal>
-    <SearchNavigator
-        @clear-search="clearSearch"
-        @search="showSearch"
-        @prev="scrollToPref"
-        @next="scrollToNext"
-        @scroll-to="scrollToTargetIndex"
-    />
+    </main>
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeUnmount, provide, ref, reactive, onMounted } from 'vue';
-import { useElectron, useReceiver } from '/@/use/electron';
-import type { NForm, NInput } from 'naive-ui';
-import { useMessage } from 'naive-ui';
-import List from '../../modules/list/list.vue';
-import type { SwaggerApiResult } from '../../../../../common/swagger';
-import { SwaggerApiResultKey } from '../../../../types/home';
-import { errorEvent, requestSwaggerEvent } from '../../../../../common/events';
-import { useSearch } from '/@/components/pages/Home/useSearch';
-import SearchNavigator from '/@/components/modules/searchNavigator.vue';
+import { defineComponent, nextTick, ref } from 'vue';
+import { Add24Regular, DeleteOff20Regular, Save20Regular } from '@vicons/fluent';
+import { EnterOutline } from '@vicons/ionicons5';
+import { Edit } from '@vicons/tabler';
 import { useList } from '/@/components/pages/Home/useList';
-
-const { send, invoke } = useElectron();
 
 export default defineComponent({
     name: 'HomePage',
     components: {
-        List,
-        SearchNavigator,
+        Add24Regular,
+        DeleteOff20Regular,
+        EnterOutline,
+        Edit,
+        Save20Regular,
     },
     setup() {
-        const message = useMessage();
+        const { list, getSourceList, save, edit, add, enter } = useList();
 
-        const { listRef, scrollToTargetIndex, scrollToNext, scrollToPref, clearListRef } =
-            useList();
-
-        const requestInputRef = ref<InstanceType<typeof NInput> | null>(null);
-
-        onMounted(() => {
-            requestInputRef.value?.focus();
-        });
-
-        const loading = ref(false);
-        const formData = ref({
-            url: '',
-        });
-        const formRef = ref<InstanceType<typeof NForm> | null>(null);
-        const source = ref({});
-
-        provide(SwaggerApiResultKey, source);
-
-        const requestListener = (data: SwaggerApiResult) => {
-            loading.value = false;
-            message.success('请求成功');
-            console.log(data);
-            source.value = data;
-        };
-        useReceiver(requestSwaggerEvent, requestListener);
-
-        const errListener = (err: Error) => {
-            console.log(err);
-            message.error(err.message);
-        };
-        useReceiver(errorEvent, errListener);
-
-        const request = async () => {
-            clearListRef();
-            clearSearch();
-
-            loading.value = true;
-            if (formRef.value) {
-                formRef.value?.validate((errors) => {
-                    if (!errors) {
-                        send(requestSwaggerEvent, formData.value.url);
-                    }
-                });
-            }
-        };
-
-        const { showSearch, searchVisible, searchVal, clearSearch, search, inputRef } = useSearch();
+        if (list.value.length === 0) {
+            nextTick(() => {
+                getSourceList();
+            });
+        }
 
         return {
-            request,
-            loading,
-            source,
-            formData,
-            formRef,
-            showSearch,
-            searchVisible,
-            searchVal,
-            clearSearch,
-            search,
-            inputRef,
-            requestInputRef,
-            listRef,
-            scrollToPref,
-            scrollToNext,
-            scrollToTargetIndex,
-        };
-    },
-    data() {
-        return {
-            rules: {
-                url: {
-                    required: true,
-                },
-            },
+            list,
+            getSourceList,
+            save,
+            edit,
+            add,
+            enter,
         };
     },
 });
 </script>
 
 <style scoped>
-a {
-    color: #42b983;
+.card-text {
+    font-size: 15px;
 }
 </style>

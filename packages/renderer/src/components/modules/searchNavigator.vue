@@ -102,7 +102,7 @@
 
 <script>
 import { ChevronUp, ChevronDown, CloseOutline, SearchOutline } from '@vicons/ionicons5';
-import { useSearchInjection } from '../pages/Home/useSearch';
+import { useSearchInjection } from '../pages/Source/useSearch';
 import { computed, ref, watch } from 'vue';
 export default {
     name: 'SearchNavigator',

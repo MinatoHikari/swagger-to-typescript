@@ -1,20 +1,94 @@
 import { ref } from 'vue';
-import type List from '/@/components/modules/list/list.vue';
+import { useElectron, useReceiver } from '/@/use/electron';
+import { electronStoreGetEvent, electronStoreSetEvent } from '../../../../../common/events';
+import type { StoreType } from '../../../../../main/src/store';
+import { useRouter } from 'vue-router';
+import { useSwaggerStore } from '/@/store/swagger';
 
-export const useList = () => {
-    const listRef = ref<InstanceType<typeof List> | null>(null);
-    const clearListRef = () => {
-        listRef.value && listRef.value.innerCardRefsMap.clear();
+export type HomeListItem = {
+    type: 'default' | 'edit';
+    key: `${number}`;
+    name: string;
+    source: string;
+};
+
+const { send, invoke } = useElectron();
+
+export function useList() {
+    const router = useRouter();
+    const store = useSwaggerStore();
+
+    let keyNum = 0;
+    const sourceListener = (data: HomeListItem[]) => {
+        console.log(data);
+        list.value = data.map((i) => {
+            const currentKey = keyNum;
+            keyNum++;
+            return {
+                name: i.name ?? '',
+                source: i.source ?? '',
+                type: 'default',
+                key: `${currentKey}`,
+            };
+        });
+        if (list.value.length === 0) {
+            list.value.push({
+                name: '',
+                source: '',
+                type: 'default',
+                key: `${keyNum}`,
+            });
+            keyNum++;
+        }
     };
-    const scrollToPref = () => listRef.value?.scrollToPrevResult();
-    const scrollToNext = () => listRef.value?.scrollToNextResult();
-    const scrollToTargetIndex = (e: number) => listRef.value?.scrollToTargetIndex(e);
+    useReceiver(electronStoreGetEvent, sourceListener);
+
+    const list = ref<HomeListItem[]>([]);
+
+    const getSourceList = () => {
+        console.log(1);
+        send<keyof StoreType>(electronStoreGetEvent, 'sourceList');
+    };
+
+    const save = (index: number) => {
+        send<{
+            key: keyof StoreType;
+            data: Omit<HomeListItem, 'type' | 'key'>[];
+        }>(electronStoreSetEvent, {
+            key: 'sourceList',
+            data: list.value.map((i) => ({
+                name: i.name,
+                source: i.source,
+            })),
+        });
+        list.value[index].type = 'default';
+    };
+
+    const edit = (index: number) => {
+        list.value[index].type = 'edit';
+    };
+
+    const add = () => {
+        list.value.push({
+            name: '',
+            source: '',
+            type: 'edit',
+            key: `${keyNum}`,
+        });
+        keyNum++;
+    };
+
+    const enter = (index: number) => {
+        store.sourceUrl[0] = list.value[index].source;
+        router.push('/source');
+    };
 
     return {
-        listRef,
-        scrollToPref,
-        scrollToNext,
-        scrollToTargetIndex,
-        clearListRef,
+        list,
+        getSourceList,
+        save,
+        edit,
+        add,
+        enter,
     };
-};
+}

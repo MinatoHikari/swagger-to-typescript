@@ -41,8 +41,8 @@ const createWindow = async () => {
         webPreferences: {
             preload: join(__dirname, '../../preload/dist/index.cjs'),
         },
-        width: 1280,
-        height: 720,
+        width: 1366,
+        height: 768,
     });
 
     /**

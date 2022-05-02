@@ -110,7 +110,7 @@ import type {
 import type { SwaggerMethodsProperty } from '../../../../../common/swagger';
 import { useRouter } from 'vue-router';
 import { useSwaggerStore } from '/@/store/swagger';
-import { useSearchResult } from '/@/components/pages/Home/useSearch';
+import { useSearchResult } from '/@/components/pages/Source/useSearch';
 import type { NCard } from 'naive-ui';
 import type { ComponentPublicInstance } from '@vue/runtime-core';
 import { useHelper } from '/@/components/modules/list/useHelper';
@@ -205,13 +205,13 @@ export default defineComponent({
             title: string,
             method: string,
             path: string,
-            data: SwaggerMethodsProperty,
+            methodsProperty: SwaggerMethodsProperty,
         ) => {
             store.$patch({
                 title,
                 method,
                 path,
-                data,
+                methodsProperty,
             });
             router.push('/methodDetail');
         };

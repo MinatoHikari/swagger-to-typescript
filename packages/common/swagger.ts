@@ -7,6 +7,12 @@ export interface SwaggerApiResult {
     definitions: SwaggerDefinitions;
 }
 
+export interface SwaggerApiResources {
+    location: string;
+    name: string;
+    swaggerVersion: string;
+}
+
 export type SwaggerParameter =
     | 'integer'
     | 'string'
