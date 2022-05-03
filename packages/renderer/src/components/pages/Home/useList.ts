@@ -1,10 +1,10 @@
-import {ref} from 'vue';
-import {useElectron, useReceiver} from '/@/use/electron';
-import {electronStoreGetEvent, electronStoreSetEvent} from '../../../../../common/events';
-import type {StoreType} from '../../../../../common/store';
-import {useRouter} from 'vue-router';
-import {useSwaggerStore} from '/@/store/swagger';
-import type {HomeListItem} from '../../../../../common/pages';
+import { ref } from 'vue';
+import { useElectron, useReceiver } from '/@/use/electron';
+import { electronStoreGetEvent, electronStoreSetEvent } from '../../../../../common/events';
+import type { StoreType } from '../../../../../common/store';
+import { useRouter } from 'vue-router';
+import { useSwaggerStore } from '/@/store/swagger';
+import type { HomeListItem } from '../../../../../common/pages';
 
 const { send, invoke } = useElectron();
 
@@ -77,6 +77,18 @@ export function useList() {
         router.push('/source');
     };
 
+    const deleteItem = (index: number) => {
+        const res = list.value.filter((i, curIndex) => curIndex !== index);
+        send<{
+            key: keyof StoreType;
+            data: Omit<HomeListItem, 'type' | 'key'>[];
+        }>(electronStoreSetEvent, {
+            key: 'sourceList',
+            data: res,
+        });
+        list.value = res;
+    };
+
     return {
         list,
         getSourceList,
@@ -84,5 +96,6 @@ export function useList() {
         edit,
         add,
         enter,
+        deleteItem,
     };
 }

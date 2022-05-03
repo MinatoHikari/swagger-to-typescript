@@ -30,6 +30,7 @@ import {
     NSkeleton,
     NEllipsis,
     NSelect,
+    NPopconfirm,
 } from 'naive-ui';
 import type { App } from 'vue';
 
@@ -67,6 +68,7 @@ export const installNaive = (app: App<Element>): void => {
             NSkeleton,
             NEllipsis,
             NSelect,
+            NPopconfirm,
         ],
     });
 

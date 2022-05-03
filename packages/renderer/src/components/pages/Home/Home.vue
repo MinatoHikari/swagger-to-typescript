@@ -4,8 +4,8 @@
             <n-gi span="21" offset="1">
                 <n-grid x-gap="12" y-gap="12">
                     <n-gi span="24">
-                        <n-grid x-gap="12" y-gap="12">
-                            <n-gi v-for="(item, index) in list" :key="item.key" span="12">
+                        <n-grid x-gap="12" y-gap="12" cols="1 m:2" responsive="screen">
+                            <n-gi v-for="(item, index) in list" :key="item.key">
                                 <n-card>
                                     <n-grid x-gap="12" y-gap="12">
                                         <n-gi span="12">
@@ -25,6 +25,7 @@
                                                                 background-color: white;
                                                                 max-width: 100%;
                                                                 pointer-events: auto;
+                                                                min-width: 100px;
                                                             "
                                                         >
                                                             <n-ellipsis :tooltip="false">
@@ -67,9 +68,14 @@
                                                         <EnterOutline />
                                                     </n-icon>
                                                 </n-button>
-                                                <n-button type="default" ghost>
-                                                    <n-icon><DeleteOff20Regular /></n-icon>
-                                                </n-button>
+                                                <n-popconfirm @positive-click="deleteItem(index)">
+                                                    <template #trigger>
+                                                        <n-button type="default" ghost>
+                                                            <n-icon><DeleteOff20Regular /></n-icon>
+                                                        </n-button>
+                                                    </template>
+                                                    Confirm deleting?
+                                                </n-popconfirm>
                                             </n-button-group>
                                         </n-gi>
                                         <n-gi span="24">
@@ -77,11 +83,13 @@
                                                 <n-input-group-label>Source</n-input-group-label>
                                                 <n-input
                                                     v-model:value.trim="item.source"
-                                                    style="width: 60%"
+                                                    style="max-width: 60%"
                                                     placeholder="http://example.com"
                                                 />
                                                 <n-input-group-label>
-                                                    /swagger-ui.html
+                                                    <n-ellipsis>
+                                                        <div>/swagger-ui.html</div>
+                                                    </n-ellipsis>
                                                 </n-input-group-label>
                                             </n-input-group>
                                             <n-input-group v-else>
@@ -91,11 +99,12 @@
                                                         <n-input-group-label
                                                             style="
                                                                 background-color: white;
-                                                                max-width: 60%;
+                                                                max-width: 50%;
                                                                 pointer-events: auto;
+                                                                min-width: 200px;
                                                             "
                                                         >
-                                                            <n-ellipsis :tooltip="false">
+                                                            <n-ellipsis v-if="item.source" :tooltip="false">
                                                                 {{ item.source }}
                                                             </n-ellipsis>
                                                         </n-input-group-label>
@@ -103,14 +112,16 @@
                                                     {{ item.source }}
                                                 </n-tooltip>
                                                 <n-input-group-label>
-                                                    /swagger-ui.html
+                                                    <n-ellipsis>
+                                                        <div>/swagger-ui.html</div>
+                                                    </n-ellipsis>
                                                 </n-input-group-label>
                                             </n-input-group>
                                         </n-gi>
                                     </n-grid>
                                 </n-card>
                             </n-gi>
-                            <n-gi span="12">
+                            <n-gi>
                                 <n-card style="cursor: pointer" @click="add">
                                     <n-grid x-gap="12" y-gap="12">
                                         <n-gi span="8">
@@ -192,7 +203,7 @@ export default defineComponent({
         Save20Regular,
     },
     setup() {
-        const { list, getSourceList, save, edit, add, enter } = useList();
+        const { list, getSourceList, save, edit, add, enter, deleteItem } = useList();
 
         if (list.value.length === 0) {
             nextTick(() => {
@@ -207,6 +218,7 @@ export default defineComponent({
             edit,
             add,
             enter,
+            deleteItem,
         };
     },
 });
