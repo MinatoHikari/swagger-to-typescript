@@ -6,6 +6,7 @@
                     <n-form-item label="Resources" path="location">
                         <n-select
                             v-model:value="formData.location"
+                            filterable
                             :options="resourceOptions"
                             @update:value="request"
                         />
@@ -116,7 +117,7 @@ export default defineComponent({
 
         const requestListener = (data: SwaggerApiResult) => {
             loading.value = false;
-            message.success('请求成功');
+            message.success('sync success');
             console.log(data);
             source.value = data;
         };
