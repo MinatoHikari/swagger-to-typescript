@@ -38,13 +38,6 @@ export default defineConfig({
         target: `chrome${chrome}`,
         outDir: 'dist',
         assetsDir: '.',
-        terserOptions: {
-            ecma: 2020,
-            compress: {
-                passes: 2,
-            },
-            safari10: false,
-        },
         rollupOptions: {
             external: [...builtinModules],
         },

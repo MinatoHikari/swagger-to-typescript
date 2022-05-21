@@ -40,7 +40,6 @@ export function useList() {
     const list = ref<HomeListItem[]>([]);
 
     const getSourceList = () => {
-        console.log(1);
         send<keyof StoreType>(electronStoreGetEvent, 'sourceList');
     };
 

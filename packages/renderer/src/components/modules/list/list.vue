@@ -112,7 +112,7 @@ import { useRouter } from 'vue-router';
 import { useSwaggerStore } from '/@/store/swagger';
 import { useSearchResult } from '/@/components/pages/Source/useSearch';
 import type { NCard } from 'naive-ui';
-import type { ComponentPublicInstance } from '@vue/runtime-core';
+import type { ComponentPublicInstance } from 'vue';
 import { useHelper } from '/@/components/modules/list/useHelper';
 import TextSpliter from '../textSpliter.vue';
 
@@ -166,23 +166,19 @@ export default defineComponent({
                 for (let item of val.tags) {
                     tags.value.set(item.name, {});
                 }
-                let keys = Object.keys(source.value.paths);
+                let keys = Object.keys(val.paths);
                 for (let key of keys) {
-                    const methodKeys = Object.keys(source.value.paths[key]) as [
-                        keyof SwaggerMethod,
-                    ];
-                    const property = source.value.paths[key];
+                    const methodKeys = Object.keys(val.paths[key]) as [keyof SwaggerMethod];
+                    const property = val.paths[key];
                     if (property) {
                         const name = property[methodKeys[0]].tags[0];
                         const itemObj = tags.value.get(name);
                         itemObj && (itemObj[key] = property);
                     }
                 }
-                let definitionKeys = Object.keys(
-                    source.value.definitions,
-                ) as (keyof SwaggerDefinitions)[];
+                let definitionKeys = Object.keys(val.definitions) as (keyof SwaggerDefinitions)[];
                 for (let key of definitionKeys) {
-                    store.definitionMap.set(key as string, source.value.definitions[key]);
+                    store.definitionMap.set(key as string, val.definitions[key]);
                 }
             },
             { deep: true },

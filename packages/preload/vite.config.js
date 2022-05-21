@@ -27,14 +27,6 @@ export default defineConfig({
     target: `chrome${chrome}`,
     outDir: 'dist',
     assetsDir: '.',
-    minify: process.env.MODE === 'development' ? false : 'terser',
-    terserOptions: {
-      ecma: 2020,
-      compress: {
-        passes: 2,
-      },
-      safari10: false,
-    },
     lib: {
       entry: 'src/index.ts',
       formats: ['cjs'],
