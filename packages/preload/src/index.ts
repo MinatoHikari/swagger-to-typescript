@@ -1,7 +1,7 @@
 import type { IpcRendererEvent } from 'electron';
 import { contextBridge, ipcMain, ipcRenderer } from 'electron';
 import eventApi from './api/event';
-import interaction from '/@/api/interaction';
+import interaction from './api/interaction';
 
 const apiKey = 'electron';
 /**

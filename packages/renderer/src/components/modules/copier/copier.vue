@@ -22,6 +22,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { QuestionCircle24Regular } from '@vicons/fluent';
+import type { CopyEvent } from '/@/components/modules/copier/type';
 
 export default defineComponent({
     name: 'CopierComponent',
@@ -29,7 +30,11 @@ export default defineComponent({
         QuestionCircle24Regular,
     },
     props: [],
-    emits: ['copy'],
+    emits: {
+        copy(payload: CopyEvent) {
+            return true;
+        },
+    },
     setup(props, { emit }) {
         const structName = ref('');
         const isPartial = ref(false);

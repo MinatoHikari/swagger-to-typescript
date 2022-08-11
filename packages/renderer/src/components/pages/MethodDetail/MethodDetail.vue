@@ -42,11 +42,7 @@
                                     >
                                         <Copier
                                             @copy="
-                                                (e) =>
-                                                    copyType(
-                                                        e,
-                                                        filterTable(table, checkedRequestRowKeys),
-                                                    )
+                                                copyWrapper($event, table, checkedRequestRowKeys)
                                             "
                                         />
 
@@ -78,14 +74,11 @@
                                     >
                                         <Copier
                                             @copy="
-                                                (e) =>
-                                                    responseType.copyType(
-                                                        e,
-                                                        filterTable(
-                                                            unref(responseType.table),
-                                                            checkedResponseRowKeys,
-                                                        ),
-                                                    )
+                                                copyWrapper(
+                                                    $event,
+                                                    unref(responseType.table),
+                                                    checkedRequestRowKeys,
+                                                )
                                             "
                                         />
 
@@ -117,9 +110,10 @@ import { useColumns as useResponseDefinitionColumns } from '../Definition/useTab
 import type { SwaggerDefinition, SwaggerParams } from '../../../../../common/swagger';
 import { useEvents } from '/@/components/pages/MethodDetail/useEvents';
 import { useEvents as useDefinitionEvents } from '/@/components/pages/Definition/useEvents';
-import Copier from '/@/components/modules/copier.vue';
+import Copier from '/@/components/modules/copier/copier.vue';
 import type { SwaggerDefinitionProperty } from '../../../../../common/swagger';
 import { storeToRefs } from 'pinia';
+import type { CopyEvent } from '/@/components/modules/copier/type';
 
 export default defineComponent({
     name: 'MethodDetail',
@@ -187,12 +181,20 @@ export default defineComponent({
         const { checkedRowKeys: checkedRequestRowKeys, useRowKey } = useTable();
         const { checkedRowKeys: checkedResponseRowKeys } = useTable();
 
+        const copyWrapper = (
+            e: CopyEvent,
+            table: (SwaggerDefinitionProperty & { name: string })[],
+            keys: string[],
+        ) => {
+            copyType(e, filterTable(table as SwaggerParams[], keys));
+        };
+
         return {
             ...storeToRefs(store),
             splitRequestParamsList,
             getDefinitionName,
             columns,
-            copyType,
+            copyWrapper,
             responseTypeList,
             checkedRequestRowKeys,
             checkedResponseRowKeys,

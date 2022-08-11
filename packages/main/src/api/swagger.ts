@@ -1,6 +1,7 @@
 import type { BrowserWindow } from 'electron';
-import { ipcMain, net } from 'electron';
+import { clipboard, ipcMain, net } from 'electron';
 import {
+    copyEvent,
     electronStoreGetEvent,
     electronStoreSetEvent,
     errorEvent,
@@ -9,8 +10,8 @@ import {
 } from '../../../common/events';
 import store from '../store';
 import IpcMainEvent = Electron.IpcMainEvent;
-import type {StoreType} from '../../../common/store';
-import type {HomeListItem} from '../../../common/pages';
+import type { StoreType } from '../../../common/store';
+import type { HomeListItem } from '../../../common/pages';
 
 function initClient(
     client: Electron.ClientRequest,
@@ -86,4 +87,10 @@ export const getStore = (mainWindow: BrowserWindow | null) => {
             store.set(data.key, data.data);
         },
     );
+};
+
+export const execCopy = () => {
+    ipcMain.on(copyEvent, (event, str: string) => {
+        clipboard.writeText(str);
+    });
 };

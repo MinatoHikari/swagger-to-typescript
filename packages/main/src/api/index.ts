@@ -1,4 +1,4 @@
-import { getStore, requestSwagger } from './swagger';
+import { execCopy, getStore, requestSwagger } from './swagger';
 import { setProxy } from './config';
 import type { BrowserWindow } from 'electron';
 import { checkElement } from './menu';
@@ -10,4 +10,5 @@ export const registerApi = (mainWindow: BrowserWindow | null): void => {
     checkElement(mainWindow);
     searchShortCut(mainWindow);
     getStore(mainWindow);
+    execCopy();
 };

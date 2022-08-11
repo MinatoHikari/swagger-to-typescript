@@ -1,7 +1,8 @@
-import { clipboard } from 'electron';
+import { ipcRenderer } from 'electron';
+import { copyEvent } from '../../../common/events';
 
 export default {
     copy: async (str: string): Promise<void> => {
-        clipboard.writeText(str);
+        ipcRenderer.send(copyEvent, str);
     },
 };

@@ -1,66 +1,72 @@
 {
-  "name": "swagger-to-typescript",
-  "private": true,
-  "engines": {
-    "node": ">=v14.16",
-    "npm": ">=7.7"
-  },
-  "main": "packages/main/dist/index.cjs",
-  "scripts": {
-    "buildEnvTypes": "node scripts/buildEnvTypes.js",
-    "build": "node scripts/build.js",
-    "precompile": "cross-env MODE=production npm run build",
-    "compile": "electron-builder build --config electron-builder.config.js --dir --config.asar=false",
-    "compile-win": "electron-builder build --config electron-builder.config.js --dir --config.asar=false --win --x64",
-    "pretest": "cross-env MODE=test npm run build",
-    "test": "node tests/app.spec.js",
-    "watch": "node scripts/watch.js",
-    "lint": "eslint . --ext js,ts,vue",
-    "pretypecheck": "npm run buildEnvTypes",
-    "typecheck-main": "tsc --noEmit -p packages/main/tsconfig.json",
-    "typecheck-preload": "tsc --noEmit -p packages/preload/tsconfig.json",
-    "typecheck-renderer": "vue-tsc --noEmit -p packages/renderer/tsconfig.json",
-    "typecheck": "npm run typecheck-main && npm run typecheck-preload && npm run typecheck-renderer"
-  },
-  "browserslist": [
-    "Chrome 100"
-  ],
-  "simple-git-hooks": {
-    "pre-commit": "npx lint-staged",
-    "pre-push": "npm run typecheck"
-  },
-  "lint-staged": {
-    "*.{js,ts,vue}": "eslint --cache --fix"
-  },
-  "devDependencies": {
-    "@types/electron-devtools-installer": "^2.2.2",
-    "@typescript-eslint/eslint-plugin": "^5.12.0",
-    "@vicons/fluent": "^0.12.0",
-    "@vicons/ionicons5": "^0.12.0",
-    "@vicons/tabler": "^0.12.0",
-    "@vitejs/plugin-vue": "^2.3.3",
-    "cross-env": "^7.0.3",
-    "electron": "^18.2.4",
-    "electron-builder": "^23.0.3",
-    "electron-devtools-installer": "^3.2.0",
-    "eslint": "^8.16.0",
-    "eslint-plugin-vue": "^9.0.1",
-    "lint-staged": "^12.3.4",
-    "prettier": "^2.6.2",
-    "simple-git-hooks": "^2.6.1",
-    "typescript": "^4.6.4",
-    "vite": "^2.9.9",
-    "vue-tsc": "^0.34.15"
-  },
-  "dependencies": {
-    "@vitejs/plugin-vue-jsx": "^1.3.10",
-    "@vueuse/core": "^8.5.0",
-    "electron-store": "^8.0.1",
-    "electron-updater": "^5.0.1",
-    "naive-ui": "^2.29.0",
-    "pinia": "^2.0.14",
-    "vfonts": "^0.1.0",
-    "vue": "^3.2.35",
-    "vue-router": "^4.0.15"
-  }
+    "name": "swagger-to-typescript",
+    "private": true,
+    "engines": {
+        "node": ">=v14.16",
+        "npm": ">=7.7"
+    },
+    "main": "packages/main/dist/index.cjs",
+    "scripts": {
+        "buildEnvTypes": "node scripts/buildEnvTypes.js",
+        "build": "node scripts/build.js",
+        "precompile": "cross-env MODE=production pnpm run build",
+        "compile": "electron-builder build --config electron-builder.config.js --dir --config.asar=false",
+        "compile-win": "electron-builder build --config electron-builder.config.js --dir --config.asar=false --win --x64",
+        "pretest": "cross-env MODE=test npm run build",
+        "test": "node tests/app.spec.js",
+        "watch": "node scripts/watch.js",
+        "lint": "eslint . --ext js,ts,vue",
+        "pretypecheck": "pnpm run buildEnvTypes",
+        "typecheck-main": "tsc --noEmit -p packages/main/tsconfig.json",
+        "typecheck-preload": "tsc --noEmit -p packages/preload/tsconfig.json",
+        "typecheck-renderer": "vue-tsc --noEmit -p packages/renderer/tsconfig.json",
+        "typecheck": "pnpm run typecheck-main && pnpm run typecheck-preload && pnpm run typecheck-renderer"
+    },
+    "browserslist": [
+        "Chrome 100"
+    ],
+    "simple-git-hooks": {
+        "pre-commit": "npx lint-staged",
+        "pre-push": "npm run typecheck"
+    },
+    "lint-staged": {
+        "*.{js,ts,vue}": "eslint --cache --fix"
+    },
+    "devDependencies": {
+        "@types/electron-devtools-installer": "^2.2.2",
+        "@typescript-eslint/eslint-plugin": "^5.33.0",
+        "@typescript-eslint/parser": "^5.33.0",
+        "@vicons/fluent": "^0.12.0",
+        "@vicons/ionicons5": "^0.12.0",
+        "@vicons/tabler": "^0.12.0",
+        "@vitejs/plugin-vue": "^3.0.1",
+        "cross-env": "^7.0.3",
+        "electron": "^20.0.2",
+        "electron-builder": "^23.3.3",
+        "electron-devtools-installer": "^3.2.0",
+        "eslint": "^8.21.0",
+        "eslint-plugin-vue": "^9.3.0",
+        "lint-staged": "^13.0.3",
+        "prettier": "^2.7.1",
+        "simple-git-hooks": "^2.8.0",
+        "typescript": "^4.7.4",
+        "vite": "^3.0.5",
+        "vue-tsc": "^0.40.1"
+    },
+    "dependencies": {
+        "@vitejs/plugin-vue-jsx": "^2.0.0",
+        "@vueuse/core": "^9.1.0",
+        "electron-store": "^8.1.0",
+        "electron-updater": "^5.2.1",
+        "naive-ui": "^2.32.1",
+        "pinia": "^2.0.18",
+        "vfonts": "^0.1.0",
+        "vue": "^3.2.37",
+        "vue-router": "^4.1.3"
+    },
+    "pnpm": {
+        "overrides": {
+            "vue": "3.2.37"
+        }
+    }
 }

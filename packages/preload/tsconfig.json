@@ -6,7 +6,10 @@
       "/@/*": [
         "./src/*"
       ]
-    }
+    },
+    "lib": [
+      "dom"
+    ]
   },
   "files": [
     "types/electron-api.d.ts",
