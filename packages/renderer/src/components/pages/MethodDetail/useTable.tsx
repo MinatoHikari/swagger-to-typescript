@@ -1,8 +1,5 @@
 import type { SwaggerParams } from '../../../../../common/swagger';
-import { buttonDark } from 'naive-ui';
 import { useUtils } from '/@/use/utils';
-import { useRouter } from 'vue-router';
-import { ref } from 'vue';
 
 export const useColumns = () => {
     const { getDefinitionName, baseTypeMap } = useUtils();

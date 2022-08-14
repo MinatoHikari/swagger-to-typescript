@@ -1,4 +1,3 @@
-import { defineStore } from 'pinia';
 import type { SwaggerDefinition, SwaggerMethodsProperty } from '../../../common/swagger';
 
 export const useSwaggerStore = defineStore({

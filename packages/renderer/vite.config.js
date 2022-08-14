@@ -6,33 +6,37 @@ import { builtinModules } from 'module';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
-import { loadAndSetEnv } from '../../scripts/loadAndSetEnv.mjs';
+import AutoImport from 'unplugin-auto-import/vite';
+import { renderer } from 'unplugin-auto-expose';
 
 const PACKAGE_ROOT = __dirname;
-
-/**
- * Vite looks for `.env.[mode]` files only in `PACKAGE_ROOT` directory.
- * Therefore, you must manually load and set the environment variables from the root directory above
- */
-loadAndSetEnv(process.env.MODE, process.cwd());
 
 /**
  * @see https://vitejs.dev/config/
  */
 export default defineConfig({
+    mode: process.env.MODE,
+    envDir: process.cwd(),
+    base: '',
     root: PACKAGE_ROOT,
     resolve: {
         alias: {
             '/@/': join(PACKAGE_ROOT, 'src') + '/',
         },
     },
-    plugins: [vue(), vueJsx({})],
-    base: '',
-    server: {
-        fsServe: {
-            root: join(PACKAGE_ROOT, '../../'),
-        },
-    },
+    plugins: [
+        vue({
+            reactivityTransform: true,
+        }),
+        vueJsx({}),
+        AutoImport({
+            imports: ['vue', 'vue-router', 'pinia', '@vueuse/head', '@vueuse/core'],
+            dts: 'src/auto-imports.d.ts',
+        }),
+        renderer.vite({
+            preloadEntry: join(PACKAGE_ROOT, '../preload/src/index.ts'),
+        }),
+    ],
     build: {
         sourcemap: true,
         target: `chrome${chrome}`,
@@ -42,5 +46,6 @@ export default defineConfig({
             external: [...builtinModules],
         },
         emptyOutDir: true,
+        reportCompressedSize: false,
     },
 });

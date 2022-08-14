@@ -1,7 +1,7 @@
 <template>
     <h2 id="versions" style="text-align: center">Lib versions</h2>
     <div>
-        <ul aria-labelledby="versions">
+        <ul id="process-versions" aria-labelledby="versions">
             <li v-for="(version, lib) in versions" :key="lib">
                 <strong>{{ lib }}</strong>
                 : v{{ version }}
@@ -11,12 +11,13 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
-import { useElectron } from '/@/use/electron';
+// import { useElectron } from '/@/use/electron';
+import { versions } from '#preload';
+
 export default defineComponent({
     name: 'AboutPage',
     setup() {
-        const { versions } = useElectron();
+        // const { versions } = useElectron();
         return { versions: computed(() => versions || {}) };
     },
 });

@@ -187,7 +187,6 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, nextTick, ref } from 'vue';
 import { Add24Regular, DeleteOff20Regular, Save20Regular } from '@vicons/fluent';
 import { EnterOutline } from '@vicons/ionicons5';
 import { Edit } from '@vicons/tabler';

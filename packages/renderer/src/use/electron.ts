@@ -1,10 +1,15 @@
-import { onActivated, onDeactivated, onBeforeUnmount, ref, getCurrentInstance } from 'vue';
+import { send, sendSync, receive, versions, invoke, copy } from '#preload';
 
 export function useElectron(): Readonly<ElectronApi> {
-    return window.electron;
+    return {
+        send,
+        sendSync,
+        receive,
+        versions,
+        invoke,
+        copy,
+    };
 }
-
-const { receive, invoke, send, sendSync } = useElectron();
 
 export const useReceiver = (channel: string, func: (...args: any) => any) => {
     const vm = getCurrentInstance();

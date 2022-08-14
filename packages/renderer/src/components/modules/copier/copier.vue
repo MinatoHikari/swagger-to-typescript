@@ -20,7 +20,6 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
 import { QuestionCircle24Regular } from '@vicons/fluent';
 import type { CopyEvent } from '/@/components/modules/copier/type';
 

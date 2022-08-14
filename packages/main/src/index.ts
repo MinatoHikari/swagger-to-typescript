@@ -22,12 +22,13 @@ const env = import.meta.env;
 if (env.MODE === 'development') {
     app.whenReady()
         .then(() => import('electron-devtools-installer'))
-        .then(({ default: installExtension, VUEJS3_DEVTOOLS }) =>
-            installExtension(VUEJS3_DEVTOOLS, {
-                loadExtensionOptions: {
-                    allowFileAccess: true,
-                },
-            }),
+        .then(
+            async ({ default: installExtension, VUEJS_DEVTOOLS }) =>
+                await installExtension(VUEJS_DEVTOOLS, {
+                    loadExtensionOptions: {
+                        allowFileAccess: true,
+                    },
+                }),
         )
         .catch((e) => console.error('Failed install extension:', e));
 }

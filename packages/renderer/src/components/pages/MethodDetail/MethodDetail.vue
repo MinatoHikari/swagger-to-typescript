@@ -101,8 +101,6 @@
 </template>
 
 <script lang="tsx">
-import type { Ref, ComputedRef, UnwrapRef } from 'vue';
-import { computed, defineComponent, isReactive, ref, toRefs, unref } from 'vue';
 import { useSwaggerStore } from '/@/store/swagger';
 import { usePropertiesList, useTable, useUtils } from '/@/use/utils';
 import { useColumns } from '/@/components/pages/MethodDetail/useTable';
@@ -112,8 +110,8 @@ import { useEvents } from '/@/components/pages/MethodDetail/useEvents';
 import { useEvents as useDefinitionEvents } from '/@/components/pages/Definition/useEvents';
 import Copier from '/@/components/modules/copier/copier.vue';
 import type { SwaggerDefinitionProperty } from '../../../../../common/swagger';
-import { storeToRefs } from 'pinia';
 import type { CopyEvent } from '/@/components/modules/copier/type';
+import type { Ref, ComputedRef } from 'vue';
 
 export default defineComponent({
     name: 'MethodDetail',

@@ -25,8 +25,6 @@
 </template>
 
 <script lang="tsx">
-import { computed, defineComponent, Ref, ref, toRefs } from 'vue';
-import { useRoute } from 'vue-router';
 import { usePropertiesList, useTable, useUtils } from '/@/use/utils';
 import { useSwaggerStore } from '/@/store/swagger';
 import type { SwaggerDefinition, SwaggerDefinitionProperty } from '../../../../../common/swagger';

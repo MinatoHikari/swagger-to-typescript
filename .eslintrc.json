@@ -18,16 +18,23 @@
     "plugins": ["@typescript-eslint"],
     "ignorePatterns": ["types/env.d.ts", "node_modules/**", "**/dist/**"],
     "rules": {
+
         "@typescript-eslint/no-unused-vars": "off",
         "@typescript-eslint/no-var-requires": "off",
-        "@typescript-eslint/consistent-type-imports": "error",
+        "@typescript-eslint/consistent-type-imports": [
+            "error",
+            {
+                "disallowTypeAnnotations": false
+            }
+        ],
+        "no-undef" : "off",
 
         /**
          * Having a semicolon helps the optimizer interpret your code correctly.
          * This avoids rare errors in optimized code.
          * @see https://twitter.com/alex_kozack/status/1364210394328408066
          */
-        "semi": ["error", "always"],
+        "semi": "warn",
         /**
          * This will make the history of changes in the hit a little cleaner
          */

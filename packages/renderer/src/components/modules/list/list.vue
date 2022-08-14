@@ -89,17 +89,6 @@
 </template>
 
 <script lang="ts">
-import type { ComponentInternalInstance } from 'vue';
-import {
-    defineComponent,
-    getCurrentInstance,
-    inject,
-    onBeforeUpdate,
-    onRenderTracked,
-    onUpdated,
-    ref,
-    watch,
-} from 'vue';
 import { SwaggerApiResultKey } from '../../../../types/home';
 import type {
     SwaggerApiResult,
@@ -108,10 +97,8 @@ import type {
     SwaggerPath,
 } from '../../../../../common/swagger';
 import type { SwaggerMethodsProperty } from '../../../../../common/swagger';
-import { useRouter } from 'vue-router';
 import { useSwaggerStore } from '/@/store/swagger';
 import { useSearchResult } from '/@/components/pages/Source/useSearch';
-import type { NCard } from 'naive-ui';
 import type { ComponentPublicInstance } from 'vue';
 import { useHelper } from '/@/components/modules/list/useHelper';
 import TextSpliter from '../textSpliter.vue';

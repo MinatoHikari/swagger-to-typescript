@@ -1,21 +1,12 @@
 {
-  "extends": "../../tsconfig.json",
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "/@/*": [
-        "./src/*"
-      ]
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "/@/*": ["./src/*"]
+        },
+        "lib": ["dom"]
     },
-    "lib": [
-      "dom"
-    ]
-  },
-  "files": [
-    "types/electron-api.d.ts",
-    "src/index.ts"
-  ],
-  "include": [
-    "../../types/**/*.d.ts"
-  ]
+    "include": ["../../types/**/*.d.ts"],
+    "exclude": ["**/*.spec.ts", "**/*.test.ts"]
 }

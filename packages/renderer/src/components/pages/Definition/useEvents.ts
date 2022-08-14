@@ -1,8 +1,8 @@
 import { useUtils } from '/@/use/utils';
 import { useElectron } from '/@/use/electron';
 import { useMessage } from 'naive-ui';
-import type { Ref } from 'vue';
 import type { SwaggerDefinitionProperty } from '../../../../../common/swagger';
+import type { Ref } from 'vue';
 
 export const useEvents = (oName: string, requiredList: string[] | undefined) => {
     const { getDefinitionChildType } = useUtils();

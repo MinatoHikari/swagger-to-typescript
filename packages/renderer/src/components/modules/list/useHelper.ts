@@ -1,6 +1,5 @@
 import type { SwaggerMethod, SwaggerPath } from '../../../../../common/swagger';
-import type { ComponentPublicInstance } from '@vue/runtime-core';
-import type { ComponentInternalInstance, Ref } from 'vue';
+import type { ComponentPublicInstance, Ref } from 'vue';
 
 export const useHelper = (
     setRefList: (

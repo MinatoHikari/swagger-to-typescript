@@ -7,27 +7,32 @@
     },
     "main": "packages/main/dist/index.cjs",
     "scripts": {
-        "buildEnvTypes": "node scripts/buildEnvTypes.js",
-        "build": "node scripts/build.js",
-        "precompile": "cross-env MODE=production pnpm run build",
-        "compile": "electron-builder build --config electron-builder.config.js --dir --config.asar=false",
-        "compile-win": "electron-builder build --config electron-builder.config.js --dir --config.asar=false --win --x64",
-        "pretest": "cross-env MODE=test npm run build",
-        "test": "node tests/app.spec.js",
-        "watch": "node scripts/watch.js",
-        "lint": "eslint . --ext js,ts,vue",
-        "pretypecheck": "pnpm run buildEnvTypes",
-        "typecheck-main": "tsc --noEmit -p packages/main/tsconfig.json",
-        "typecheck-preload": "tsc --noEmit -p packages/preload/tsconfig.json",
-        "typecheck-renderer": "vue-tsc --noEmit -p packages/renderer/tsconfig.json",
-        "typecheck": "pnpm run typecheck-main && pnpm run typecheck-preload && pnpm run typecheck-renderer"
+        "build": "npm run build:main && npm run build:preload && npm run build:renderer",
+        "build:main": "cd ./packages/main && vite build",
+        "build:preload": "cd ./packages/preload && vite build",
+        "build:renderer": "cd ./packages/renderer && vite build",
+        "compile": "cross-env MODE=production npm run build && electron-builder build --config .electron-builder.config.js --dir --config.asar=false",
+        "compile-win": "cross-env MODE=production npm run build && electron-builder build --config .electron-builder.config.js --dir --config.asar=false --win --x64",
+        "test": "npm run test:main && npm run test:preload && npm run test:renderer && npm run test:e2e",
+        "test:e2e": "npm run build && vitest run",
+        "test:main": "vitest run -r packages/main --passWithNoTests",
+        "test:preload": "vitest run -r packages/preload --passWithNoTests",
+        "test:renderer": "vitest run -r packages/renderer --passWithNoTests",
+        "watch": "node scripts/watch.mjs",
+        "lint": "eslint . --ext js,mjs,cjs,ts,mts,cts,vue",
+        "typecheck:main": "tsc --noEmit -p packages/main/tsconfig.json",
+        "typecheck:preload": "tsc --noEmit -p packages/preload/tsconfig.json",
+        "typecheck:renderer": "vue-tsc --noEmit -p packages/renderer/tsconfig.json",
+        "typecheck": "npm run typecheck:main && npm run typecheck:preload && npm run typecheck:renderer",
+        "postinstall": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/update-electron-vendors.mjs",
+        "format": "npx prettier --write \"**/*.{js,mjs,cjs,ts,mts,cts,vue,json}\""
     },
     "browserslist": [
         "Chrome 100"
     ],
     "simple-git-hooks": {
         "pre-commit": "npx lint-staged",
-        "pre-push": "npm run typecheck"
+        "pre-push": "pnpm run typecheck"
     },
     "lint-staged": {
         "*.{js,ts,vue}": "eslint --cache --fix"
@@ -42,6 +47,7 @@
         "@vitejs/plugin-vue": "^3.0.1",
         "cross-env": "^7.0.3",
         "electron": "^20.0.2",
+        "playwright": "1.25.0",
         "electron-builder": "^23.3.3",
         "electron-devtools-installer": "^3.2.0",
         "eslint": "^8.21.0",
@@ -50,8 +56,11 @@
         "prettier": "^2.7.1",
         "simple-git-hooks": "^2.8.0",
         "typescript": "^4.7.4",
-        "vite": "^3.0.5",
-        "vue-tsc": "^0.40.1"
+        "vite": "^3.0.7",
+        "vitest": "^0.21.1",
+        "vue-tsc": "^0.40.1",
+        "unplugin-auto-import": "^0.11.1",
+        "unplugin-auto-expose": "0.0.2"
     },
     "dependencies": {
         "@vitejs/plugin-vue-jsx": "^2.0.0",

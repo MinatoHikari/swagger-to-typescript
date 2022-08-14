@@ -1,7 +1,5 @@
 import type { SwaggerParams } from '../../../../../common/swagger';
-import { buttonDark } from 'naive-ui';
 import { useUtils } from '/@/use/utils';
-import { useRouter } from 'vue-router';
 import type { SwaggerDefinitionProperty } from '../../../../../common/swagger';
 
 export const useColumns = (requiredList: string[] | undefined) => {

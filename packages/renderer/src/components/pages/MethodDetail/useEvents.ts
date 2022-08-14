@@ -4,7 +4,6 @@ import { useElectron } from '/@/use/electron';
 import { useMessage } from 'naive-ui';
 import { useSwaggerStore } from '/@/store/swagger';
 import type { Ref } from 'vue';
-import { computed } from 'vue';
 
 export const useEvents = () => {
     const { getParamsType } = useUtils();

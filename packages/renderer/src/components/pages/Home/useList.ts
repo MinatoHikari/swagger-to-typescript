@@ -1,8 +1,6 @@
-import { ref } from 'vue';
 import { useElectron, useReceiver } from '/@/use/electron';
 import { electronStoreGetEvent, electronStoreSetEvent } from '../../../../../common/events';
 import type { StoreType } from '../../../../../common/store';
-import { useRouter } from 'vue-router';
 import { useSwaggerStore } from '/@/store/swagger';
 import type { HomeListItem } from '../../../../../common/pages';
 
@@ -78,12 +76,19 @@ export function useList() {
 
     const deleteItem = (index: number) => {
         const res = list.value.filter((i, curIndex) => curIndex !== index);
+        console.log(res.map((i) => ({
+            name: i.name,
+            source: i.source,
+        })));
         send<{
             key: keyof StoreType;
             data: Omit<HomeListItem, 'type' | 'key'>[];
         }>(electronStoreSetEvent, {
             key: 'sourceList',
-            data: res,
+            data: res.map((i) => ({
+                name: i.name,
+                source: i.source,
+            })),
         });
         list.value = res;
     };

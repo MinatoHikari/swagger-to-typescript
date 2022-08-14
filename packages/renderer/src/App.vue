@@ -28,7 +28,6 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
 import AppNavigation from '/@/components/AppNavigation.vue';
 import { NDialogProvider, NMessageProvider } from 'naive-ui';
 import { useContextMenu } from '/@/use/useContextMenu';

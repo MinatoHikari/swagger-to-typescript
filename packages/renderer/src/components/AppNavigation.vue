@@ -16,7 +16,6 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
 import { useSwaggerStore } from '/@/store/swagger';
 
 export default defineComponent({

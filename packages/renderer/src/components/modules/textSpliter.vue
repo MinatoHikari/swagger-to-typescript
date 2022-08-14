@@ -7,7 +7,6 @@
 </template>
 
 <script lang="tsx">
-import { computed, defineComponent, ref } from 'vue';
 
 export default defineComponent({
     name: 'TextSpliter',

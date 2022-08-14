@@ -62,7 +62,6 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, provide, ref, onMounted } from 'vue';
 import { useElectron, useReceiver } from '/@/use/electron';
 import type { NForm, NInput } from 'naive-ui';
 import { useMessage } from 'naive-ui';

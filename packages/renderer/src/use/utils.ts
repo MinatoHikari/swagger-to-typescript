@@ -1,5 +1,3 @@
-import type { Ref, UnwrapRef } from 'vue';
-import { computed, ref, unref, isReactive } from 'vue';
 import type {
     SwaggerDefinition,
     SwaggerDefinitionProperty,
