@@ -1,33 +1,33 @@
 name: Typechecking
-on: [ workflow_call ]
+on: [workflow_call]
 
 concurrency:
-  group: typechecking-${{ github.ref }}
-  cancel-in-progress: true
+    group: typechecking-${{ github.ref }}
+    cancel-in-progress: true
 
 defaults:
-  run:
-    shell: 'bash'
+    run:
+        shell: 'bash'
 
 jobs:
-  typescript:
-    runs-on: ubuntu-latest
+    typescript:
+        runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v3
-      -   uses: pnpm/action-setup@v2.2.2
-          with:
-              version: 7
-      -   name: Use Node.js 16
-          uses: actions/setup-node@v3
-          with:
-              node-version: 16
-              cache: 'pnpm'
-      -   name: Install dependencies
-          run: pnpm install
+        steps:
+            - uses: actions/checkout@v3
+            - uses: pnpm/action-setup@v2.2.2
+              with:
+                  version: 7
+            - name: Use Node.js 16
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 16
+                  cache: 'pnpm'
+            - name: Install dependencies
+              run: pnpm install
 
-      - run: pnpm ci
-        env:
-          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+            - run: pnpm ci
+              env:
+                  PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
 
-      - run: pnpm run typecheck --if-present
+            - run: pnpm run typecheck --if-present
