@@ -1,52 +1,65 @@
 name: Tests
-on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'packages/**'
-      - 'tests/**'
-      - 'package-lock.json'
-      - '.github/workflows/tests.yml'
-  pull_request:
-    paths:
-      - 'packages/**'
-      - 'tests/**'
-      - 'package-lock.json'
-      - '.github/workflows/tests.yml'
+on: [workflow_call]
+
+concurrency:
+    group: tests-${{ github.ref }}
+    cancel-in-progress: true
 
 defaults:
-  run:
-    shell: 'bash'
+    run:
+        shell: 'bash'
 
 jobs:
-  e2e:
-    strategy:
-      matrix:
-        os: [ windows-latest ]
+    unit:
+        strategy:
+            fail-fast: false
+            matrix:
+                os: [windows-latest, ubuntu-latest, macos-latest]
+                package: [main, preload, renderer]
+        runs-on: ${{ matrix.os }}
+        steps:
+            - uses: actions/checkout@v3
+            - uses: pnpm/action-setup@v2.2.2
+              with:
+                  version: 7
+            - name: Use Node.js 16
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 16
+                  cache: 'pnpm'
+            - name: Install dependencies
+              run: pnpm install
+            - run: pnpm ci
+              env:
+                  PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+            - run: pnpm run test:${{ matrix.package }} --if-present
 
-    runs-on: ${{ matrix.os }}
+    e2e:
+        strategy:
+            fail-fast: false
+            matrix:
+                os: [windows-latest, ubuntu-latest, macos-latest]
+        runs-on: ${{ matrix.os }}
+        steps:
+            - uses: actions/checkout@v3
+            -   uses: pnpm/action-setup@v2.2.2
+                with:
+                    version: 7
+            -   name: Use Node.js 16
+                uses: actions/setup-node@v3
+                with:
+                    node-version: 16
+                    cache: 'pnpm'
+            -   name: Install dependencies
+                run: pnpm install
+            - run: pnpm ci
+              env:
+                  PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
 
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 15 # Need for npm >=7.7
+              # I ran into problems trying to run an electron window in ubuntu due to a missing graphics server.
+              # That's why this special command for Ubuntu is here
+            - run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- pnpm run test:e2e --if-present
+              if: matrix.os == 'ubuntu-latest'
 
-      - name: Get npm cache directory
-        id: npm-cache-dir
-        run: echo "::set-output name=dir::$(npm config get cache)"
-
-      - uses: actions/cache@v2
-        id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
-        with:
-          path: ${{ steps.npm-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      # TODO: Install not all dependencies, but only those required for this workflow
-      - name: Install dependencies
-        run: npm ci
-
-      - run: npm test
+            - run: pnpm run test:e2e --if-present
+              if: matrix.os != 'ubuntu-latest'
