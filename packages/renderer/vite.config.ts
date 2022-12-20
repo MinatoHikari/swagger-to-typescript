@@ -8,6 +8,8 @@ import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import AutoImport from 'unplugin-auto-import/vite';
 import { renderer } from 'unplugin-auto-expose';
+import Components from 'unplugin-vue-components/vite';
+import { NaiveUiResolver } from 'unplugin-vue-components/resolvers';
 
 const PACKAGE_ROOT = __dirname;
 
@@ -35,6 +37,10 @@ export default defineConfig({
         }),
         renderer.vite({
             preloadEntry: join(PACKAGE_ROOT, '../preload/src/index.ts'),
+        }),
+        Components({
+            dts: true,
+            resolvers: [NaiveUiResolver()],
         }),
     ],
     build: {

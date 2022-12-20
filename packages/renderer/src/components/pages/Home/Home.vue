@@ -79,7 +79,7 @@
                                             </n-button-group>
                                         </n-gi>
                                         <n-gi span="24">
-                                            <n-input-group v-if="item.type === 'edit'">
+                                            <n-input-group v-if="item.type !== 'edit'">
                                                 <n-input-group-label>Source</n-input-group-label>
                                                 <n-input
                                                     v-model:value.trim="item.source"
@@ -88,7 +88,7 @@
                                                 />
                                                 <n-input-group-label>
                                                     <n-ellipsis>
-                                                        <div>/swagger-ui.html</div>
+                                                        <div>{{ item.suffix }}</div>
                                                     </n-ellipsis>
                                                 </n-input-group-label>
                                             </n-input-group>
@@ -104,18 +104,29 @@
                                                                 min-width: 200px;
                                                             "
                                                         >
-                                                            <n-ellipsis v-if="item.source" :tooltip="false">
+                                                            <n-ellipsis
+                                                                v-if="item.source"
+                                                                :tooltip="false"
+                                                            >
                                                                 {{ item.source }}
                                                             </n-ellipsis>
                                                         </n-input-group-label>
                                                     </template>
                                                     {{ item.source }}
                                                 </n-tooltip>
-                                                <n-input-group-label>
-                                                    <n-ellipsis>
-                                                        <div>/swagger-ui.html</div>
-                                                    </n-ellipsis>
-                                                </n-input-group-label>
+                                                <n-select
+                                                    v-model:value="item.suffix"
+                                                    :options="[
+                                                        {
+                                                            value: '/swagger-ui.html',
+                                                            label: '/swagger-ui.html',
+                                                        },
+                                                        {
+                                                            value: '/swagger-ui/index.html',
+                                                            label: '/swagger-ui/index.html',
+                                                        },
+                                                    ]"
+                                                />
                                             </n-input-group>
                                         </n-gi>
                                     </n-grid>

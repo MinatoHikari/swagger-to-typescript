@@ -3,4 +3,5 @@ export type HomeListItem = {
     key: `${number}`;
     name: string;
     source: string;
+    suffix: string;
 };

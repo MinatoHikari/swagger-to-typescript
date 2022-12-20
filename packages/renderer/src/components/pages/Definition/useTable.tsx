@@ -1,6 +1,7 @@
 import type { SwaggerParams } from '../../../../../common/swagger';
 import { useUtils } from '/@/use/utils';
 import type { SwaggerDefinitionProperty } from '../../../../../common/swagger';
+import { NButton } from 'naive-ui';
 
 export const useColumns = (requiredList: string[] | undefined) => {
     const { getDefinitionName, baseTypeMap } = useUtils();
@@ -29,13 +30,13 @@ export const useColumns = (requiredList: string[] | undefined) => {
                         return (
                             <span>
                                 <span>{'Array<'}</span>
-                                <n-button
+                                <NButton
                                     onClick={() => toDefinition(definitionName)}
                                     text={true}
                                     color={'#2180f0'}
                                 >
                                     {`${definitionName}`}
-                                </n-button>
+                                </NButton>
                                 <span>{'>'}</span>
                             </span>
                         );
@@ -44,13 +45,13 @@ export const useColumns = (requiredList: string[] | undefined) => {
                 } else {
                     const definitionName = getDefinitionName(row.$ref as string);
                     return (
-                        <n-button
+                        <NButton
                             onClick={() => toDefinition(definitionName)}
                             text={true}
                             color={'#2180f0'}
                         >
                             {definitionName}
-                        </n-button>
+                        </NButton>
                     );
                 }
             },

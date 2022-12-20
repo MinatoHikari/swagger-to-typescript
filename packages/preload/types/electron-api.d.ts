@@ -6,7 +6,7 @@ declare global {
 
 interface ElectronApi {
     readonly versions: Readonly<NodeJS.ProcessVersions>;
-    readonly send: <T =any>(channel: string, data?: T) => void;
+    readonly send: <T =any>(channel: string, ...data: T[]) => void;
     readonly sendSync: (channel: string, data?: any) => any;
     readonly receive: (channel: string, listener: (...args: any) => void) => symbol;
     readonly invoke: (channel: string, listenerSymbol: symbol) => void;

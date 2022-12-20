@@ -4,6 +4,7 @@ import { useSwaggerStore } from '/@/store/swagger';
 import { requestApiSourcesEvent, requestSwaggerEvent } from '../../../../../common/events';
 import { useElectron, useReceiver } from '/@/use/electron';
 import type { SwaggerApiResources } from '../../../../../common/swagger';
+import type { SwaggerApiV3Resources } from '../../../../../common/swagger';
 
 const { send, invoke } = useElectron();
 
@@ -11,20 +12,31 @@ export const useSelect = () => {
     const store = useSwaggerStore();
 
     const resourceOptions = ref<SelectOption[]>([]);
+    const currentVersion = ref<'v2' | 'v3'>('v2');
 
     const requestSources = () => {
-        if (store.sourceUrl[0]) send(requestApiSourcesEvent, store.sourceUrl[0]);
+        const { url, version } = store.sourceUrl[0];
+        currentVersion.value = version;
+        if (store.sourceUrl[0]) send(requestApiSourcesEvent, url, version);
     };
 
-    const requestListener = (data: SwaggerApiResources[]) => {
+    const requestListener = (data: SwaggerApiResources[] | SwaggerApiV3Resources) => {
         console.log(data);
-        resourceOptions.value = data.map((item) => {
-            return {
-                label: item.name,
-                value: item.location,
-            };
-        });
-        console.log(resourceOptions.value);
+        if (Array.isArray(data)) {
+            resourceOptions.value = data.map((item) => {
+                return {
+                    label: item.name,
+                    value: item.location,
+                };
+            });
+        } else {
+            resourceOptions.value = data.urls.map((item) => {
+                return {
+                    label: item.name,
+                    value: item.url,
+                };
+            });
+        }
     };
     useReceiver(requestApiSourcesEvent, requestListener);
 
@@ -35,5 +47,6 @@ export const useSelect = () => {
     return {
         resourceOptions,
         requestSources,
+        currentVersion,
     };
 };

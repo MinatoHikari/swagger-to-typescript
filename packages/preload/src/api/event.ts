@@ -3,8 +3,8 @@ import { ipcRenderer } from 'electron';
 
 const listenerMap = new Map();
 
-export const send = (channel: string, data?: any) => {
-    ipcRenderer.send(channel, data);
+export const send = (channel: string, ...data: any[]) => {
+    ipcRenderer.send(channel, ...data);
 };
 
 export const receive = (channel: string, listener: (...args: any) => void) => {

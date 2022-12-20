@@ -29,7 +29,6 @@
 
 <script lang="ts">
 import AppNavigation from '/@/components/AppNavigation.vue';
-import { NDialogProvider, NMessageProvider } from 'naive-ui';
 import { useContextMenu } from '/@/use/useContextMenu';
 import { ArrowUpload20Regular } from '@vicons/fluent';
 import { useWindowScroll } from '@vueuse/core';
@@ -38,8 +37,6 @@ export default defineComponent({
     name: 'App',
     components: {
         AppNavigation,
-        NMessageProvider,
-        NDialogProvider,
         ArrowUpload20Regular,
     },
     setup() {

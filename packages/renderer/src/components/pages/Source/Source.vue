@@ -43,7 +43,7 @@
                     ref="inputRef"
                     v-model:value="searchVal"
                     placeholder="input what you want to find"
-                    type="input"
+                    type="text"
                     @keyup.enter="search"
                 />
             </n-gi>
@@ -75,8 +75,8 @@ import { useList } from '/@/components/pages/Source/useList';
 import { Refresh } from '@vicons/tabler';
 import { Search } from '@vicons/tabler';
 import { useSelect } from '/@/components/pages/Source/useSelect';
-import type { NavigationGuardNext, RouteLocationRaw } from 'vue-router';
 import { useSwaggerStore } from '/@/store/swagger';
+import type { SwaggerV3ApiResult } from '../../../../../common/swagger';
 
 const { send, invoke } = useElectron();
 
@@ -97,7 +97,7 @@ export default defineComponent({
 
         const { showSearch, searchVisible, searchVal, clearSearch, search, inputRef } = useSearch();
 
-        const { resourceOptions, requestSources } = useSelect();
+        const { resourceOptions, requestSources, currentVersion } = useSelect();
 
         const requestInputRef = ref<InstanceType<typeof NInput> | null>(null);
 
@@ -110,14 +110,15 @@ export default defineComponent({
             location: '',
         });
         const formRef = ref<InstanceType<typeof NForm> | null>(null);
-        const source = ref({});
+        const source = ref<SwaggerApiResult | SwaggerV3ApiResult | null>(null);
 
         provide(SwaggerApiResultKey, source);
 
-        const requestListener = (data: SwaggerApiResult) => {
+        const requestListener = (data: SwaggerApiResult | SwaggerV3ApiResult) => {
             loading.value = false;
             message.success('sync success');
             console.log(data);
+            data.version = currentVersion.value;
             source.value = data;
         };
         useReceiver(requestSwaggerEvent, requestListener);
@@ -136,7 +137,11 @@ export default defineComponent({
             if (formRef.value) {
                 formRef.value?.validate((errors) => {
                     if (!errors) {
-                        send(requestSwaggerEvent, `${store.sourceUrl}/${formData.value.location}`);
+                        send(
+                            requestSwaggerEvent,
+                            `${store.sourceUrl[0].url}`,
+                            `${formData.value.location}`,
+                        );
                     }
                 });
             }

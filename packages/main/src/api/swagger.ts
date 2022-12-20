@@ -9,9 +9,10 @@ import {
     requestSwaggerEvent,
 } from '../../../common/events';
 import store from '../store';
-import IpcMainEvent = Electron.IpcMainEvent;
 import type { StoreType } from '../../../common/store';
 import type { HomeListItem } from '../../../common/pages';
+import * as path from 'path';
+import * as urlResolve from 'url';
 
 function initClient(
     client: Electron.ClientRequest,
@@ -40,16 +41,25 @@ function initClient(
 }
 
 export const requestSwagger = (mainWindow: BrowserWindow | null): void => {
-    ipcMain.on(requestSwaggerEvent, (event, url: string) => {
-        console.log(url);
-        const client = net.request(url);
+    ipcMain.on(requestSwaggerEvent, (event, base: string, path: string) => {
+        console.log(new urlResolve.URL(path, base).toString());
+        const client = net.request({
+            // url: new URL(url).toString(),
+            url: new urlResolve.URL(path, base).toString(),
+            method: 'GET',
+        });
         initClient(client, event, requestSwaggerEvent, mainWindow);
     });
 
-    ipcMain.on(requestApiSourcesEvent, (event, sourceUrl) => {
-        const url = `${sourceUrl}/swagger-resources`;
-        const client = net.request(url);
-        initClient(client, event, requestApiSourcesEvent, mainWindow);
+    ipcMain.on(requestApiSourcesEvent, (event, baseUrl: string, version: 'v2' | 'v3') => {
+        if (version === 'v2') {
+            const url = `${baseUrl}/swagger-resources`;
+            const client = net.request(url);
+            initClient(client, event, requestApiSourcesEvent, mainWindow);
+        } else {
+            const client = net.request(`${baseUrl}/v3/api-docs/swagger-config`);
+            initClient(client, event, requestApiSourcesEvent, mainWindow);
+        }
     });
 };
 

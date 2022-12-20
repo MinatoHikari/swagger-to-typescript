@@ -95,6 +95,7 @@ import type {
     SwaggerDefinitions,
     SwaggerMethod,
     SwaggerPath,
+    SwaggerV3ApiResult,
 } from '../../../../../common/swagger';
 import type { SwaggerMethodsProperty } from '../../../../../common/swagger';
 import { useSwaggerStore } from '/@/store/swagger';
@@ -119,7 +120,8 @@ export default defineComponent({
                 tags: [],
                 basePath: '/',
                 host: '',
-            } as SwaggerApiResult),
+                version: 'v2',
+            } as SwaggerApiResult | SwaggerV3ApiResult),
         );
 
         const tags = ref(new Map<string, SwaggerPath>());
@@ -149,6 +151,7 @@ export default defineComponent({
         watch(
             source,
             (val) => {
+                console.log(source);
                 tags.value = new Map<string, SwaggerPath>();
                 for (let item of val.tags) {
                     tags.value.set(item.name, {});
@@ -163,9 +166,16 @@ export default defineComponent({
                         itemObj && (itemObj[key] = property);
                     }
                 }
-                let definitionKeys = Object.keys(val.definitions) as (keyof SwaggerDefinitions)[];
+                let definitionKeys: (keyof SwaggerDefinitions)[] = [];
+                let definitions: SwaggerDefinitions;
+                if (source.value.version == 'v2') {
+                    definitions = (val as SwaggerApiResult).definitions;
+                } else {
+                    definitions = (val as SwaggerV3ApiResult).components.schemas;
+                }
+                definitionKeys = Object.keys(definitions) as (keyof SwaggerDefinitions)[];
                 for (let key of definitionKeys) {
-                    store.definitionMap.set(key as string, val.definitions[key]);
+                    store.definitionMap.set(key as string, definitions[key]);
                 }
             },
             { deep: true },
@@ -190,6 +200,7 @@ export default defineComponent({
             path: string,
             methodsProperty: SwaggerMethodsProperty,
         ) => {
+            console.log('methodsProperty', methodsProperty);
             store.$patch({
                 title,
                 method,

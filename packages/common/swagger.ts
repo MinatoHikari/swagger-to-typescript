@@ -5,12 +5,32 @@ export interface SwaggerApiResult {
     tags: SwaggerTag[];
     paths: SwaggerPath;
     definitions: SwaggerDefinitions;
+    version: 'v2';
+}
+
+export interface SwaggerV3ApiResult {
+    swagger: string;
+    basePath: string;
+    host: string;
+    tags: SwaggerTag[];
+    paths: SwaggerPath;
+    components: {
+        schemas: SwaggerDefinitions;
+    };
+    version: 'v3';
 }
 
 export interface SwaggerApiResources {
     location: string;
     name: string;
     swaggerVersion: string;
+}
+
+export interface SwaggerApiV3Resources {
+    configUrl: string;
+    oauth2RedirectUrl: string;
+    validatorUrl: string;
+    urls: { name: string; url: string }[];
 }
 
 export type SwaggerParameter =
@@ -46,16 +66,26 @@ export type SwaggerMethodsProperty = {
     consumes: [string];
     description: string;
     operationId: string;
-    parameters: SwaggerParams[];
+    parameters?: SwaggerParams[];
+    requestBody: {
+        content: {
+            [content: string]: {
+                schema?: {
+                    $ref: string;
+                };
+            };
+        };
+        required: boolean;
+    };
     produces: string[];
-    responses: SwaggerResponses;
+    responses: SwaggerResponses | SwaggerV3Responses;
     summary: string;
     tags: [string];
 };
 
 export type SwaggerParams = {
     description: string;
-    format: SwaggerFormat;
+    format?: SwaggerFormat;
     in: string;
     name: string;
     required: boolean;
@@ -68,11 +98,29 @@ export type SwaggerParams = {
     };
 };
 
+export type SwaggerRequestBodyTableData = {
+    name: string;
+    data: SwaggerParams[];
+};
+
 export type SwaggerResponses = {
     [code: string]: {
         description: string;
         schema?: {
             $ref: string;
+        };
+    };
+};
+
+export type SwaggerV3Responses = {
+    [code: string]: {
+        description: string;
+        content: {
+            [content: string]: {
+                schema?: {
+                    $ref: string;
+                };
+            };
         };
     };
 };
@@ -83,7 +131,7 @@ export type SwaggerPath = {
 
 export type SwaggerDefinition = {
     description: string;
-    type: 'object';
+    type?: 'object';
     properties: {
         [key: string]: SwaggerDefinitionProperty;
     };

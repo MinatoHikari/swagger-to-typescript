@@ -35,14 +35,18 @@
                             >
                                 <n-collapse>
                                     <n-collapse-item
-                                        v-for="(table, index) in splitRequestParamsList"
-                                        :key="index"
-                                        :title="table[0].in"
-                                        :name="table[0].in"
+                                        v-for="table in splitRequestParamsList"
+                                        :key="table.name"
+                                        :title="table.name"
+                                        :name="table.name"
                                     >
                                         <Copier
                                             @copy="
-                                                copyWrapper($event, table, checkedRequestRowKeys)
+                                                copyWrapper(
+                                                    $event,
+                                                    table.data,
+                                                    checkedRequestRowKeys,
+                                                )
                                             "
                                         />
 
@@ -50,7 +54,7 @@
                                             v-model:checked-row-keys="checkedRequestRowKeys"
                                             style="margin-top: 12px"
                                             :columns="columns"
-                                            :data="table"
+                                            :data="table.data"
                                             :row-key="useRowKey"
                                         />
                                     </n-collapse-item>
@@ -105,13 +109,18 @@ import { useSwaggerStore } from '/@/store/swagger';
 import { usePropertiesList, useTable, useUtils } from '/@/use/utils';
 import { useColumns } from '/@/components/pages/MethodDetail/useTable';
 import { useColumns as useResponseDefinitionColumns } from '../Definition/useTable';
-import type { SwaggerDefinition, SwaggerParams } from '../../../../../common/swagger';
+import type {
+    SwaggerParams,
+    SwaggerResponses,
+    SwaggerV3Responses,
+} from '../../../../../common/swagger';
 import { useEvents } from '/@/components/pages/MethodDetail/useEvents';
 import { useEvents as useDefinitionEvents } from '/@/components/pages/Definition/useEvents';
 import Copier from '/@/components/modules/copier/copier.vue';
 import type { SwaggerDefinitionProperty } from '../../../../../common/swagger';
 import type { CopyEvent } from '/@/components/modules/copier/type';
 import type { Ref, ComputedRef } from 'vue';
+import type { SwaggerRequestBodyTableData } from '../../../../../common/swagger';
 
 export default defineComponent({
     name: 'MethodDetail',
@@ -135,12 +144,20 @@ export default defineComponent({
             }[]
         > = ref([]);
         for (let item in store.methodsProperty.responses) {
-            const responseCodeItem = store.methodsProperty.responses[item];
+            let responseCodeItem: { schema?: { $ref: string } };
+            const itemWrapper = store.methodsProperty.responses[item];
+            if ((itemWrapper as SwaggerV3Responses[keyof SwaggerV3Responses]).content) {
+                responseCodeItem = (store.methodsProperty.responses as SwaggerV3Responses)[item]
+                    .content['*/*'];
+            } else {
+                responseCodeItem = (store.methodsProperty.responses as SwaggerResponses)[item];
+            }
             if (responseCodeItem.schema && responseCodeItem.schema.$ref) {
                 const definitionName = getDefinitionName(responseCodeItem.schema.$ref);
                 const responseType = store.definitionMap.get(definitionName);
                 if (responseType) {
                     const propertiesList = usePropertiesList(responseType);
+                    console.log('responseType', responseType);
                     const columns = useResponseDefinitionColumns(responseType.required);
                     const { copyType } = useDefinitionEvents(
                         `${definitionName}`
@@ -161,14 +178,48 @@ export default defineComponent({
         }
 
         const splitRequestParamsList = computed(() => {
-            const result: Array<SwaggerParams[]> = [];
-            const sourceArr = store.methodsProperty.parameters;
-            for (let i = 0; i < sourceArr.length; i++) {
-                if (i === 0 || sourceArr[i].in !== sourceArr[i - 1].in) {
-                    result.push([] as SwaggerParams[]);
+            const result: Array<SwaggerRequestBodyTableData> = [];
+            console.log(store.methodsProperty);
+            if (store.methodsProperty.parameters) {
+                const sourceArr = store.methodsProperty.parameters;
+                for (let i = 0; i < sourceArr.length; i++) {
+                    if (i === 0 || sourceArr[i].in !== sourceArr[i - 1].in) {
+                        result.push({
+                            name: sourceArr[i].in,
+                            data: [],
+                        });
+                    }
+                    (result[result.length - 1].data as SwaggerParams[]).push(sourceArr[i]);
                 }
-                result[result.length - 1].push(sourceArr[i]);
             }
+            if (store.methodsProperty.requestBody) {
+                const content = store.methodsProperty.requestBody.content;
+                const keys = Object.keys(content);
+
+                for (let key of keys) {
+                    result.push({
+                        name: `requestBody[${key}]`,
+                        data: [],
+                    });
+                    if (content[key].schema && content[key].schema?.$ref) {
+                        const definitionName = getDefinitionName(
+                            content[key].schema?.$ref as string,
+                        );
+                        const requestType = store.definitionMap.get(definitionName);
+                        if (requestType) {
+                            const item = {
+                                ...requestType,
+                                schema: content[key].schema,
+                                in: key,
+                                name: definitionName,
+                                required: true,
+                            } as SwaggerParams;
+                            result[result.length - 1].data.push(item);
+                        }
+                    }
+                }
+            }
+            console.log('result', result);
             return result;
         });
 
